@@ -23,8 +23,8 @@
  @brief This is the main ARF header. You should include this to access all the ARF classes in your project.
  */
 
-#ifndef ARF_DATAACCESSOBJECT_H
-#define ARF_DATAACCESSOBJECT_H
+#ifndef ARF_MATRIX_VIEW_H
+#define ARF_MATRIX_VIEW_H
 
 #import <vector>
 
@@ -33,46 +33,58 @@
 
 namespace ARF {
 
-template <typename T>
-class MatrixView : public Data {
-private:
+struct MatrixRange{
 	UINT startRow;
 	UINT endRow;
 	std::vector<uint8_t> columnIndices;
+	
+	MatrixRange(UINT startRow, UINT endRow) :
+	startRow(startRow), endRow(endRow){ }
+
+	MatrixRange(UINT startRow, UINT endRow,
+											 const std::vector<uint8_t> &columnIndices) :
+	startRow(startRow), endRow(endRow), columnIndices(columnIndices) { }
+};
+
+template <typename T>
+class MatrixView : public Data {
+	
+private:
+	MatrixRange matrixRange;
 	Matrix<T> * matrix;
 	
 public:
 	MatrixView(Matrix<T> * matrix, UINT startRow, UINT endRow) :
-	matrix(matrix), startRow(startRow), endRow(endRow) {
+	matrix(matrix), matrixRange({startRow, endRow}){
 	}
 	
 	MatrixView(Matrix<T> * matrix, UINT startRow, UINT endRow, const std::vector<uint8_t> &columnIndices) :
-	matrix(matrix), startRow(startRow), endRow(endRow), columnIndices(columnIndices) {
+	matrix(matrix), matrixRange({startRow, endRow, columnIndices}){
 	}
 	
 	void setColumnIndices(const std::vector<uint8_t> &newColumnIndices) {
-		columnIndices = newColumnIndices;
+		matrixRange.columnIndices = newColumnIndices;
 	}
 	
 	void setRowRange(UINT newStartRow, UINT newEndRow) {
-		startRow = newStartRow;
-		endRow = newEndRow;
+		matrixRange.startRow = newStartRow;
+		matrixRange.endRow = newEndRow;
 	}
 	
 	UINT getStartRow(){
-		return startRow;
+		return matrixRange.startRow;
 	}
 	
 	UINT getEndRow(){
-		return endRow;
+		return matrixRange.endRow;
 	}
 	
 	UINT getNumRows() {
-		return endRow - startRow + 1;
+		return matrixRange.endRow - matrixRange.startRow + 1;
 	}
 	
 	UINT getNumColumns() {
-		return columnIndices.size();
+		return matrixRange.columnIndices.size();
 	}
 	
 	/**
@@ -82,7 +94,7 @@ public:
 	 @return a pointer to the data at row r
 	 */
 	inline T* operator[](const unsigned int r){
-		return matrix[r + startRow];
+		return matrix[r + matrixRange.startRow];
 	}
 	
 	/**
@@ -98,4 +110,4 @@ public:
 
 }
 
-#endif //ARF_DATAACCESSOBJECT_H
+#endif //ARF_MATRIX_VIEW_H

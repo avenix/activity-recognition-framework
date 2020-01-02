@@ -23,30 +23,29 @@
  @brief This is the main ARF header. You should include this to access all the ARF classes in your project.
  */
 
-#ifndef ARF_AXISSELECTOR_H
-#define ARF_AXISSELECTOR_H
+#ifndef ARF_MATRIX_SELECTOR_H
+#define ARF_MATRIX_SELECTOR_H
 
-#include <cstdint>
-#include <string>
 #include "../core/Algorithm.h"
-#include "../../dataStructures/Matrix.h"
 #include "../../dataStructures/MatrixView.h"
 
 namespace ARF {
 
 class MatrixSelector : public Algorithm {
+	
 private:
-	std::vector<uint8_t> columnIndices;
+	MatrixRange matrixRange;
 	
 public:
+	MatrixSelector(const MatrixRange & matrixRange);
 	
-	MatrixSelector(const std::vector<uint8_t> &columnIndices);
+	MatrixSelector(UINT startRow, UINT endRow);
 	
-	UINT getNumColumns() const;
+	MatrixSelector(UINT startRow, UINT endRow, const std::vector<uint8_t> &columnIndices);
 	
 	Data* execute(Data * data) override;
 };
 
 }
 
-#endif //ARF_AXISSELECTOR_H
+#endif //ARF_MATRIX_SELECTOR_H

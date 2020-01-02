@@ -41,6 +41,7 @@ typedef Vector<Float> SensorSample;
 
 typedef Vector<Float> Signal;
 
+typedef Matrix<Float> MatrixFloat;
 }
 
 #endif /* ARFTypedefs_h */

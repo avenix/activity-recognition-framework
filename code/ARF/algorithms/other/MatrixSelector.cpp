@@ -25,36 +25,31 @@
 
 #include "MatrixSelector.h"
 #include "../../utils/SharedVariables.hpp"
+#import "../../utils/ARFTypedefs.h"
 
 namespace ARF {
 
-MatrixSelector::MatrixSelector(const std::vector<uint8_t> &columnIndices) :
-columnIndices(columnIndices) {
-}
+MatrixSelector::MatrixSelector(const MatrixRange & matrixRange) :
+matrixRange(matrixRange){ }
+
+MatrixSelector::MatrixSelector(UINT startRow, UINT endRow) :
+matrixRange({startRow, endRow}){ }
+
+MatrixSelector::MatrixSelector(UINT startRow, UINT endRow,
+										 const std::vector<uint8_t> &columnIndices) :
+matrixRange({startRow, endRow, columnIndices}) { }
 
 /**
- Selects the axes of a sample or of multiple rows of a matrix.
+ Returns a MatrixView that can access a selection of the data in the matrix passed as input parameter
  
- @param data A DataAccessObject or sample
- @return The DataAccessObject with updates axes or the RingBuffer with an updated axes selection
+ @param data The matrix of floats from which data will be accessed
+ @return A MatrixView object, which is able to access the rows between [startRow, endRow] and {data in the 
  */
 Data* MatrixSelector::execute(Data * data) {
-	Matrix<Float> * dataMatrix = (Matrix<Float> *) data;
-	UINT numRows = dataMatrix->getNumRows();
-	UINT numCols = getNumColumns();
-	
-	Matrix<Float> * selectedColumns = new Matrix<Float> (numRows,numCols);
-	
-	for(int i = 0 ; i < numRows ; i++){
-		for(int j = 0 ; j < numCols ; j++){
-			int columnIndex = columnIndices[j];
-			(*selectedColumns)[i][j] = (*dataMatrix)[i][columnIndex];
-		}
-	}
-	return selectedColumns;
+	return new MatrixView<Float>((MatrixFloat*) data,
+										  matrixRange.startRow,
+										  matrixRange.endRow,
+										  matrixRange.columnIndices);
 }
 
-UINT MatrixSelector::getNumColumns() const{
-	return (UINT)columnIndices.size();
-}
 }

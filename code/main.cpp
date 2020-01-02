@@ -23,7 +23,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @brief This is the main ARF header. You should include this to access all the ARF classes in your project.
 */
 
-#include <iostream>
 #include "ARF.h"
 
 using namespace ARF;
