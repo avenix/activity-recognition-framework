@@ -51,4 +51,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dataStructures/Value.h"
 #include "dataStructures/MatrixView.h"
 
+//include the typedefs
+#include "utils/ARFTypedefs.h"
+
 #endif /* ARF_h */
