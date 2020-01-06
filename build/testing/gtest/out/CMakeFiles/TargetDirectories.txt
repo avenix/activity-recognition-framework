@@ -1,0 +1,14 @@
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/rebuild_cache.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/edit_cache.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample9_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample1_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample3_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample6_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample5_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample4_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample8_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample10_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample7_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/gtest_main.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/sample2_unittest.dir
+/Users/avenix/Desktop/xcode-googletest-master/Dependencies/gtest/gtestOut/CMakeFiles/gtest.dir

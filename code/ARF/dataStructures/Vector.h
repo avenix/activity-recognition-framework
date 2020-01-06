@@ -3,8 +3,7 @@
  @author  Nicholas Gillian <ngillian@media.mit.edu>
  @version 1.0
  
- @brief The Vector class is a basic class for storing any type of data.  The default Vector is an interface for std::vector, but the idea is
- this can easily be changed when needed (e.g., when running the GRT on an embedded device with limited STL support). This class is a template and can therefore be used with any generic data type.
+ @brief The Vector class is a basic class for storing any type of data.  The default Vector is an interface for std::vector, but the idea is this can easily be changed when needed (e.g., when running the GRT on an embedded device with limited STL support). This class is a template and can therefore be used with any generic data type.
  */
 
 /*
@@ -76,12 +75,12 @@ public:
 	 Constructor, copies the content from the raw rhs array into this Vector instance
 	 
 	 @param rhs the raw data from which the values will be copied
-	 @param size the size of the vector
+	 @param rhsSize the size of the vector
 	 */
-	Vector(const T * rhs, UINT size) {
-		if(size > 0){
-			resize(size);
-			std::copy(rhs, rhs + size, data.begin());
+	Vector(const T * rhs, UINT rhsSize) {
+		if(rhsSize > 0){
+			resize(rhsSize);
+			std::copy(rhs, rhs + rhsSize, data.begin());
 		} else {
 			clear();
 		}

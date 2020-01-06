@@ -1,10 +1,8 @@
 /**
  @file
- @author  Nicholas Gillian <ngillian@media.mit.edu>
- @version 1.0
- 
- @brief The Vector class is a basic class for storing any type of data.  The default Vector is an interface for std::vector, but the idea is
- this can easily be changed when needed (e.g., when running the GRT on an embedded device with limited STL support). This class is a template and can therefore be used with any generic data type.
+ @author  Nicholas Gillian <ngillian@media.mit.edu>, Juan Haladjian <juan.haladjian@gmail.com>
+ @version 2.0
+ @brief Generic 2D matrix data structure.
  */
 
 /*
@@ -95,7 +93,7 @@ public:
 	 
 	 @param data: the input data which will be copied to this Matrix instance
 	 */
-	Matrix( const Vector< Vector< T > > &data ){
+	Matrix( const Vector<Vector<T>> &data ){
 		this->dataPtr = NULL;
 		this->rowPtr = NULL;
 		this->rows = 0;
@@ -181,7 +179,7 @@ public:
 	Vector<T> getRowVector(const unsigned int r) const{
 		Vector<T> rowVector(cols);
 		for(unsigned int c = 0; c < cols; c++)
-			rowVector[c] = dataPtr[r*cols+c];
+			rowVector[c] = dataPtr[r * cols + c];
 		return rowVector;
 	}
 	
@@ -247,18 +245,18 @@ public:
 				
 				//Setup the row pointers
 				unsigned int i=0;
-				T *p = &(dataPtr[0]);
-				for(i=0; i<rows; i++){
+				T * p = &(dataPtr[0]);
+				for(i=0; i < rows; i++){
 					rowPtr[i] = p;
 					p += cols;
 				}
 				
 				return true;
 				
-			}catch( std::exception& e ){
+			} catch( std::exception& e ){
 				clear();
 				return false;
-			}catch( ... ){
+			} catch( ... ){
 				clear();
 				return false;
 			}

@@ -1,6 +1,7 @@
 /**
- @file
+  @file
  @author  Juan Haladjian <juan.haladjian@gmail.com>
+ @brief The MatrixSelector returns a MatrixView, used to access data in a Matrix without having to rellocate memory
  
  ARF MIT License
  Copyright (c) <2019> <Juan Haladjian>

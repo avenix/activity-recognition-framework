@@ -19,8 +19,6 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-@brief This is the main ARF header. You should include this to access all the ARF classes in your project.
 */
 
 #include "ARF.h"
@@ -28,7 +26,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace ARF;
 
 int main(int argc, const char * argv[]) {
-	auto ringBuffer = new RingBuffer<Float>(301, 16);
+	auto ringBuffer = RingBuffer<SensorSample>(301);
+	
+	auto ringBufferAlgorithm = new RingBufferAlgorithm(&ringBuffer,301);
 	/*
 	auto axisSelector = new ColumnSelector({0, 1, 2});
 	auto magnitude = new Magnitude();

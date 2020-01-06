@@ -1,7 +1,8 @@
 /**
 @file
 @author  Juan Haladjian <juan.haladjian@gmail.com>
-
+@brief This class defines the exception type used throughout the ARF
+ 
 ARF MIT License
 Copyright (c) <2019> <Juan Haladjian>
 
@@ -20,7 +21,6 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMA
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@brief This is the main ARF header. You should include this to access all the ARF classes in your project.
 */
 
 #ifndef ARFException_h

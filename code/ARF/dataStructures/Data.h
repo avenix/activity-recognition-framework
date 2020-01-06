@@ -1,7 +1,8 @@
 /**
 @file
 @author  Juan Haladjian <juan.haladjian@gmail.com>
-
+@brief The Data is the superclas of every data produced by and returned by an Algorithm in the ARF
+ 
 ARF MIT License
 Copyright (c) <2019> <Juan Haladjian>
 
@@ -19,8 +20,6 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-@brief This is the main ARF header. You should include this to access all the ARF classes in your project.
 */
 
 #ifndef ARF_DATA_H

@@ -1,7 +1,8 @@
 /**
 @file
 @author  Juan Haladjian <juan.haladjian@gmail.com>
-
+@brief This is the main ARF header. You should include this to access all the ARF classes in your project.
+ 
 ARF MIT License
 Copyright (c) <2019> <Juan Haladjian>
 
@@ -19,18 +20,27 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-@brief This is the main ARF header. You should include this to access all the ARF classes in your project.
 */
 
 #ifndef ARF_h
 #define ARF_h
 
+//include data structures
+#include "dataStructures/Data.h"
+#include "dataStructures/Value.h"
+#include "dataStructures/Vector.h"
+#include "dataStructures/Matrix.h"
+#include "dataStructures/MatrixView.h"
+#include "dataStructures/RingBuffer.h"
+
+//include the typedefs
+#include "utils/ARFTypedefs.h"
+
 //include the core files
 #include "algorithms/core/Algorithm.h"
 
 //include the data acquisition files
-#include "algorithms/1-dataAcquisition/RingBuffer.h"
+#include "algorithms/1-dataAcquisition/RingBufferAlgorithm.h"
 
 //include the preprocessing files
 #include "algorithms/2-preprocessing/Magnitude.h"
@@ -44,14 +54,5 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 //include the utility files
 #include "algorithms/other/MatrixSelector.h"
-
-//include data structures
-#include "dataStructures/Data.h"
-#include "dataStructures/Matrix.h"
-#include "dataStructures/Value.h"
-#include "dataStructures/MatrixView.h"
-
-//include the typedefs
-#include "utils/ARFTypedefs.h"
 
 #endif /* ARF_h */

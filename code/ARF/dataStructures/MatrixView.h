@@ -1,6 +1,7 @@
 /**
  @file
  @author  Juan Haladjian <juan.haladjian@gmail.com>
+ @brief The MatrixView is a pointer to a portion of a Matrix. This makes it possible to pass references of data instead of copying the data
  
  ARF MIT License
  Copyright (c) <2019> <Juan Haladjian>
@@ -19,8 +20,7 @@
  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
- @brief This is the main ARF header. You should include this to access all the ARF classes in your project.
+
  */
 
 #ifndef ARF_MATRIX_VIEW_H
@@ -33,7 +33,7 @@
 
 namespace ARF {
 
-struct MatrixRange{
+struct MatrixRange {
 	UINT startRow;
 	UINT endRow;
 	std::vector<uint8_t> columnIndices;

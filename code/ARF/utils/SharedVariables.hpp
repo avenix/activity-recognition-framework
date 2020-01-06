@@ -1,7 +1,8 @@
 /**
 @file
 @author  Juan Haladjian <juan.haladjian@gmail.com>
-
+@brief The SharedVariables class is used to store references to the variables used throughout the entire ARF
+ 
 ARF MIT License
 Copyright (c) <2019> <Juan Haladjian>
 
@@ -20,13 +21,12 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMA
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@brief This is the main ARF header. You should include this to access all the ARF classes in your project.
 */
 
 #ifndef SharedVariables_hpp
 #define SharedVariables_hpp
 
-#import "RingBuffer.h"
+#import "RingBufferAlgorithm.h"
 
 namespace ARF {
 
@@ -37,7 +37,7 @@ private:
 	SharedVariables();
 	
 public:
-	static RingBuffer<T> * ringBuffer;
+	static RingBuffer<SensorSample> * ringBuffer;
 	
 	SharedVariables(SharedVariables const&) = delete;
 	void operator=(SharedVariables const&)  = delete;
