@@ -24,9 +24,8 @@ TEST(RingBufferAlgorithm, Execute) {
 	EXPECT_EQ(sampleValue, (*outputSample)[0]);
 }
 
-
 TEST(RingBufferAlgorithm, NotificationInterval) {
-	//create ring buffer with 10 rows, 1 column and notificationInterval = 3
+	//create ring buffer with 10 rows and notificationInterval = 3
 	RingBufferAlgorithm ringBufferAlgorithm(10,3);
 	
 	for(int i = 1 ; i < 3 ; i++){
