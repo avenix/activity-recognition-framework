@@ -21,7 +21,7 @@
 		9AFA8CB323C601B900420D8D /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9323C601B900420D8D /* Data.h */; };
 		9AFA8CB423C601B900420D8D /* Matrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9423C601B900420D8D /* Matrix.h */; };
 		9AFA8CB523C601B900420D8D /* Value.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9523C601B900420D8D /* Value.h */; };
-		9AFA8CB623C601B900420D8D /* MatrixView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9623C601B900420D8D /* MatrixView.h */; };
+		9AFA8CB623C601B900420D8D /* DataIterator2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9623C601B900420D8D /* DataIterator2D.h */; };
 		9AFA8CB723C601B900420D8D /* Vector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9723C601B900420D8D /* Vector.h */; };
 		9AFA8CB823C601B900420D8D /* RingBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9823C601B900420D8D /* RingBuffer.h */; };
 		9AFA8CB923C601B900420D8D /* Algorithm.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9B23C601B900420D8D /* Algorithm.h */; };
@@ -32,20 +32,16 @@
 		9AFA8CBE23C601B900420D8D /* Mean.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8CA223C601B900420D8D /* Mean.cpp */; };
 		9AFA8CBF23C601B900420D8D /* Minimum.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CA323C601B900420D8D /* Minimum.h */; };
 		9AFA8CC023C601B900420D8D /* Mean.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CA423C601B900420D8D /* Mean.h */; };
-		9AFA8CC123C601B900420D8D /* MatrixSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CA623C601B900420D8D /* MatrixSelector.h */; };
-		9AFA8CC223C601B900420D8D /* MatrixSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8CA723C601B900420D8D /* MatrixSelector.cpp */; };
 		9AFA8CC323C601B900420D8D /* Magnitude.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CA923C601B900420D8D /* Magnitude.h */; };
 		9AFA8CC423C601B900420D8D /* Magnitude.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8CAA23C601B900420D8D /* Magnitude.cpp */; };
 		9AFA8CC523C601B900420D8D /* RingBufferAlgorithm.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CAC23C601B900420D8D /* RingBufferAlgorithm.h */; };
 		9AFA8CC623C601B900420D8D /* ARFConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CAE23C601B900420D8D /* ARFConstants.h */; };
 		9AFA8CC723C601B900420D8D /* ARFException.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CAF23C601B900420D8D /* ARFException.h */; };
 		9AFA8CC823C601B900420D8D /* ARFTypedefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CB023C601B900420D8D /* ARFTypedefs.h */; };
-		9AFA8CC923C601B900420D8D /* SharedVariables.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CB123C601B900420D8D /* SharedVariables.hpp */; };
 		9AFA8CCA23C601B900420D8D /* ARF.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CB223C601B900420D8D /* ARF.h */; };
 		9AFA8CD023C6023B00420D8D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8CCF23C6023B00420D8D /* main.cpp */; };
-		9AFA8CD223C669C700420D8D /* RingBufferView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CD123C669C700420D8D /* RingBufferView.h */; };
+		9AFA8CD223C669C700420D8D /* DataIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8CD123C669C700420D8D /* DataIterator.h */; };
 		9AFA8CD323C66EEA00420D8D /* libARF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A5DAED423BEC4FF00BBC964 /* libARF.a */; };
-		9AFA8CD623C66F8E00420D8D /* RingBufferSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8CD423C66F8E00420D8D /* RingBufferSelector.cpp */; };
 		9AFA8CDA23C711E300420D8D /* DataSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8CD823C711E300420D8D /* DataSet.cpp */; };
 		9AFA8CE023C7187500420D8D /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8CDE23C7187500420D8D /* Util.cpp */; };
 /* End PBXBuildFile section */
@@ -132,7 +128,7 @@
 		9AFA8C9323C601B900420D8D /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		9AFA8C9423C601B900420D8D /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
 		9AFA8C9523C601B900420D8D /* Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Value.h; sourceTree = "<group>"; };
-		9AFA8C9623C601B900420D8D /* MatrixView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatrixView.h; sourceTree = "<group>"; };
+		9AFA8C9623C601B900420D8D /* DataIterator2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataIterator2D.h; sourceTree = "<group>"; };
 		9AFA8C9723C601B900420D8D /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		9AFA8C9823C601B900420D8D /* RingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RingBuffer.h; sourceTree = "<group>"; };
 		9AFA8C9B23C601B900420D8D /* Algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Algorithm.h; sourceTree = "<group>"; };
@@ -143,20 +139,16 @@
 		9AFA8CA223C601B900420D8D /* Mean.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mean.cpp; sourceTree = "<group>"; };
 		9AFA8CA323C601B900420D8D /* Minimum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Minimum.h; sourceTree = "<group>"; };
 		9AFA8CA423C601B900420D8D /* Mean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mean.h; sourceTree = "<group>"; };
-		9AFA8CA623C601B900420D8D /* MatrixSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatrixSelector.h; sourceTree = "<group>"; };
-		9AFA8CA723C601B900420D8D /* MatrixSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MatrixSelector.cpp; sourceTree = "<group>"; };
 		9AFA8CA923C601B900420D8D /* Magnitude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Magnitude.h; sourceTree = "<group>"; };
 		9AFA8CAA23C601B900420D8D /* Magnitude.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Magnitude.cpp; sourceTree = "<group>"; };
 		9AFA8CAC23C601B900420D8D /* RingBufferAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RingBufferAlgorithm.h; sourceTree = "<group>"; };
 		9AFA8CAE23C601B900420D8D /* ARFConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARFConstants.h; sourceTree = "<group>"; };
 		9AFA8CAF23C601B900420D8D /* ARFException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARFException.h; sourceTree = "<group>"; };
 		9AFA8CB023C601B900420D8D /* ARFTypedefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARFTypedefs.h; sourceTree = "<group>"; };
-		9AFA8CB123C601B900420D8D /* SharedVariables.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SharedVariables.hpp; sourceTree = "<group>"; };
 		9AFA8CB223C601B900420D8D /* ARF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARF.h; sourceTree = "<group>"; };
 		9AFA8CCF23C6023B00420D8D /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		9AFA8CD123C669C700420D8D /* RingBufferView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RingBufferView.h; sourceTree = "<group>"; };
-		9AFA8CD423C66F8E00420D8D /* RingBufferSelector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RingBufferSelector.cpp; sourceTree = "<group>"; };
-		9AFA8CD523C66F8E00420D8D /* RingBufferSelector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RingBufferSelector.h; sourceTree = "<group>"; };
+		9AFA8CD123C669C700420D8D /* DataIterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataIterator.h; sourceTree = "<group>"; };
+		9AFA8CD523C66F8E00420D8D /* DataSelector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataSelector.h; sourceTree = "<group>"; };
 		9AFA8CD823C711E300420D8D /* DataSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataSet.cpp; sourceTree = "<group>"; };
 		9AFA8CD923C711E300420D8D /* DataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSet.h; sourceTree = "<group>"; };
 		9AFA8CDE23C7187500420D8D /* Util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
@@ -304,9 +296,9 @@
 				9AFA8C9523C601B900420D8D /* Value.h */,
 				9AFA8C9723C601B900420D8D /* Vector.h */,
 				9AFA8C9423C601B900420D8D /* Matrix.h */,
-				9AFA8C9623C601B900420D8D /* MatrixView.h */,
 				9AFA8C9823C601B900420D8D /* RingBuffer.h */,
-				9AFA8CD123C669C700420D8D /* RingBufferView.h */,
+				9AFA8CD123C669C700420D8D /* DataIterator.h */,
+				9AFA8C9623C601B900420D8D /* DataIterator2D.h */,
 			);
 			path = dataStructures;
 			sourceTree = "<group>";
@@ -336,8 +328,8 @@
 		9AFA8C9D23C601B900420D8D /* 3-eventDetection */ = {
 			isa = PBXGroup;
 			children = (
-				9AFA8C9E23C601B900420D8D /* PeakDetector.cpp */,
 				9AFA8C9F23C601B900420D8D /* PeakDetector.h */,
+				9AFA8C9E23C601B900420D8D /* PeakDetector.cpp */,
 			);
 			path = "3-eventDetection";
 			sourceTree = "<group>";
@@ -345,10 +337,10 @@
 		9AFA8CA023C601B900420D8D /* 4-featureExtraction */ = {
 			isa = PBXGroup;
 			children = (
-				9AFA8CA123C601B900420D8D /* Minimum.cpp */,
-				9AFA8CA223C601B900420D8D /* Mean.cpp */,
 				9AFA8CA323C601B900420D8D /* Minimum.h */,
+				9AFA8CA123C601B900420D8D /* Minimum.cpp */,
 				9AFA8CA423C601B900420D8D /* Mean.h */,
+				9AFA8CA223C601B900420D8D /* Mean.cpp */,
 			);
 			path = "4-featureExtraction";
 			sourceTree = "<group>";
@@ -356,10 +348,7 @@
 		9AFA8CA523C601B900420D8D /* other */ = {
 			isa = PBXGroup;
 			children = (
-				9AFA8CA623C601B900420D8D /* MatrixSelector.h */,
-				9AFA8CA723C601B900420D8D /* MatrixSelector.cpp */,
-				9AFA8CD523C66F8E00420D8D /* RingBufferSelector.h */,
-				9AFA8CD423C66F8E00420D8D /* RingBufferSelector.cpp */,
+				9AFA8CD523C66F8E00420D8D /* DataSelector.h */,
 			);
 			path = other;
 			sourceTree = "<group>";
@@ -387,7 +376,6 @@
 				9AFA8CAE23C601B900420D8D /* ARFConstants.h */,
 				9AFA8CAF23C601B900420D8D /* ARFException.h */,
 				9AFA8CB023C601B900420D8D /* ARFTypedefs.h */,
-				9AFA8CB123C601B900420D8D /* SharedVariables.hpp */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -433,19 +421,17 @@
 				9AFA8CBF23C601B900420D8D /* Minimum.h in Headers */,
 				9AFA8CB523C601B900420D8D /* Value.h in Headers */,
 				9AFA8CC623C601B900420D8D /* ARFConstants.h in Headers */,
-				9AFA8CD223C669C700420D8D /* RingBufferView.h in Headers */,
+				9AFA8CD223C669C700420D8D /* DataIterator.h in Headers */,
 				9AFA8CB323C601B900420D8D /* Data.h in Headers */,
 				9AFA8CC323C601B900420D8D /* Magnitude.h in Headers */,
-				9AFA8CC123C601B900420D8D /* MatrixSelector.h in Headers */,
 				9AFA8CB923C601B900420D8D /* Algorithm.h in Headers */,
-				9AFA8CB623C601B900420D8D /* MatrixView.h in Headers */,
+				9AFA8CB623C601B900420D8D /* DataIterator2D.h in Headers */,
 				9AFA8CC023C601B900420D8D /* Mean.h in Headers */,
 				9AFA8CC723C601B900420D8D /* ARFException.h in Headers */,
 				9AFA8CC523C601B900420D8D /* RingBufferAlgorithm.h in Headers */,
 				9AFA8CB423C601B900420D8D /* Matrix.h in Headers */,
 				9AFA8CB823C601B900420D8D /* RingBuffer.h in Headers */,
 				9AFA8CB723C601B900420D8D /* Vector.h in Headers */,
-				9AFA8CC923C601B900420D8D /* SharedVariables.hpp in Headers */,
 				9AFA8CBC23C601B900420D8D /* PeakDetector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -608,7 +594,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AFA8CDA23C711E300420D8D /* DataSet.cpp in Sources */,
-				9AFA8CD623C66F8E00420D8D /* RingBufferSelector.cpp in Sources */,
 				9AFA8CD023C6023B00420D8D /* main.cpp in Sources */,
 				9AFA8CE023C7187500420D8D /* Util.cpp in Sources */,
 			);
@@ -636,7 +621,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9AFA8CC223C601B900420D8D /* MatrixSelector.cpp in Sources */,
 				9AFA8CBB23C601B900420D8D /* PeakDetector.cpp in Sources */,
 				9AFA8CC423C601B900420D8D /* Magnitude.cpp in Sources */,
 				9AFA8CBA23C601B900420D8D /* Algorithm.cpp in Sources */,

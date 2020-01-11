@@ -23,60 +23,52 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef ARF_RING_BUFFER_VIEW_H
-#define ARF_RING_BUFFER_VIEW_H
+#ifndef ARF_DATA_ITERATOR_H
+#define ARF_DATA_ITERATOR_H
 
 #include "RingBuffer.h"
 #include "../utils/ARFTypedefs.h"
 
 namespace ARF {
 
-struct RingBufferRange {
+struct IterableRange {
 	UINT startIdx; ///< The starting index to be accessed
-	UINT nSamples; ///< The number of samples that will be accessed
+	UINT nElements; ///< The number of elements that will be accessed
 	
 	/**
 	 Returns a RingBufferRange describing a range of values in a RingBuffer
 	 
 	 @param startIdx the starting index to be accessed
-	 @param nSamples the number of samples to be accessed
+	 @param nElements the number of elements to be accessed
 	 */
-	RingBufferRange(UINT startIdx, UINT nSamples) :
-	startIdx(startIdx), nSamples(nSamples){ }
-	
+	IterableRange(UINT startIdx, UINT nElements) :
+	startIdx(startIdx), nElements(nElements){ }
 };
 
-class RingBufferView : public Data{
+template <typename T>
+class DataIterator : public Data {
 	
 private:
-	const RingBuffer<SensorSample> * ringBuffer; ///< The ringBuffer that will be accessed
-	RingBufferRange ringBufferRange; ///< The range of values to access
+	const Iterable<T> * iterable; ///< The iterable that will be accessed
+	IterableRange iterableRange; ///< The range of values to access
 	
 public:
 	/**
-	 Returns a RingBufferView ready to access values in a ring buffer
+	 Returns a DataIterator ready to access values in an iterable
 	 
-	 @param ringBuffer the ring buffer to be accessed
+	 @param iterable the iterable to be accessed
 	 @param startIdx the starting index to be accessed
-	 @param nSamples the number of samples to be accessed
+	 @param nElements the number of elements to be accessed
 	 */
-	RingBufferView(RingBuffer<SensorSample> * ringBuffer, UINT startIdx, UINT nSamples) :
-	ringBuffer(ringBuffer), ringBufferRange({startIdx, nSamples}){ }
-	
-	/**
-	 Returns a RingBufferView ready to access values in a ring buffer
-	 
-	 @param rhs the ring buffer that will be copied
-	 */
-	RingBufferView(const RingBufferView & rhs) :
-	ringBuffer(rhs.getRingBuffer()), ringBufferRange(rhs.getRingBufferRange()){ }
+	DataIterator(Iterable<T> * iterable, UINT startIdx, UINT nElements) :
+	iterable(iterable), iterableRange({startIdx, nElements}){ }
 	
 	/**
 	 Clones the data object
 	 @return the cloned object
 	 */
-	RingBufferView * clone() override {
-		return new RingBufferView(*this);
+	DataIterator * clone() override {
+		return new DataIterator(*this);
 	}
 	
 	/**
@@ -85,38 +77,38 @@ public:
 	 @param idx the vector index of the element that should be returned
 	 @return returns the value at index idx
 	 */
-	const SensorSample& operator[](const UINT idx) const{
-		return (*ringBuffer)[idx];
+	const T& operator[](const UINT idx) const{
+		return (*iterable)[idx + iterableRange.startIdx];
 	}
 	
 	/**
-	 Returns the value at the input index
+	 Returns the number of elements that will be accessed
 	 
-	 @return returns the number of values that will be accessed
+	 @return the number of elements that will be accessed
 	 */
 	UINT size() const{
-		return ringBufferRange.nSamples;
+		return iterableRange.nElements;
 	}
 	
 	/**
-	 Returns the pointer to the ring buffer
+	 Returns a pointer to the iterable
 	 
-	 @return returns the pointer to the ring buffer
+	 @return returns a pointer to the iterable
 	 */
-	const RingBuffer<SensorSample> * getRingBuffer() const{
-		return ringBuffer;
+	const Iterable<T> * getIterable() const{
+		return iterable;
 	}
 	
 	/**
-	 Returns the ring buffer range
+	 Returns the iterable range
 	 
-	 @return returns the ring buffer range
+	 @return returns the iterable range
 	 */
-	const RingBufferRange& getRingBufferRange() const{
-		return ringBufferRange;
+	const IterableRange& getIterableRange() const{
+		return iterableRange;
 	}
 };
 
 }
 
-#endif /* ARF_RING_BUFFER_VIEW_H */
+#endif /* ARF_DATA_ITERATOR_H */

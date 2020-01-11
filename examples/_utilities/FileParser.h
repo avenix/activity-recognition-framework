@@ -104,8 +104,8 @@ public:
         cols.push_back( columnString );
         
         //Remove the new line char from the string in the last column
-        if( cols.size() >= 1 ){
-            unsigned int K = cols.size()-1;
+        if( cols.getSize() >= 1 ){
+            unsigned int K = cols.getSize()-1;
             size_t foundA = (cols[K].find('\n'));
             size_t foundB = cols[K].find('\r');
             
@@ -154,8 +154,8 @@ protected:
             //Check to make sure all the columns are consistent
             if( columnSize == 0 ){
                 consistentColumnSize = true;
-                columnSize = vec.size();
-            }else if( columnSize != vec.size() ) consistentColumnSize = false;
+                columnSize = vec.getSize();
+            }else if( columnSize != vec.getSize() ) consistentColumnSize = false;
 
             fileContents.push_back( vec );
         }

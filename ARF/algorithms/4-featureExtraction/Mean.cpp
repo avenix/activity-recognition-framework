@@ -33,7 +33,7 @@ namespace ARF {
  */
 Data* Mean::execute(Data * data) {
 	Signal * signal = (Signal*) data;
-	unsigned int n = signal->size();
+	unsigned int n = signal->getSize();
 	
 	float sum = 0.0;
 	

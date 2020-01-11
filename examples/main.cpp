@@ -34,24 +34,28 @@ int main(int argc, const char * argv[]) {
 	//instantiate algorithms
 	auto ringBuffer = RingBuffer<SensorSample>(301);
 	//auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer,301,1,201);
-	auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer,301);
-	auto ringBufferSelector = RingBufferSelector(&ringBuffer,0,1);
+	auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer,2);
+	//auto sampleSelector = DataSelector<SensorSample>(&ringBuffer,1,1);//startIdx = 0, nSamples = 1
+	auto elementSelector = DataSelector<Float>(0,1,1,std::vector<int>{2});//startIdx = 0, nSamples = 1
 	//auto magnitude = Magnitude();
 	//auto peakDetector = new PeakDetector(0.8, 100);
 	
 	//build pipeline
-	//ringBufferAlgorithm << ringBufferSelector;
+	ringBufferAlgorithm << sampleSelector << elementSelector;
 	
 	//execute pipeline
 	SensorSample data = SensorSample(std::vector<float>{1.0,2.0,3.0});
+	SensorSample data2 = SensorSample(std::vector<float>{4.0,5.0,6.0});
 	
 	//DataSet dataSet(16,"GoalkeeperDataSet","9-axis IMU data + linear acceleration + quaternion");
 	//dataSet.load("../data/S1.txt");
 	
-	SensorSample * output = (SensorSample*) Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data);
+	Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data);
+	DataIterator<Float> * output = (DataIterator<Float> *) Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data2);
+	Float sample = (*output)[0];
 	
 	//will return a sample
-	std::cout << (*output)[0] << std::endl;
+	std::cout << sample << std::endl;
 	
 	return 0;
 }

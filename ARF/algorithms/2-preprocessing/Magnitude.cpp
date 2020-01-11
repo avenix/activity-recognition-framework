@@ -34,7 +34,6 @@ namespace ARF {
  */
 Data* Magnitude::execute(Data * data) {
 	Signal * signal = (Signal*) data;
-	auto val = (*signal)[0];
 	
 	Float result = std::sqrt((*signal)[0] * (*signal)[1] * (*signal)[2]);
 	

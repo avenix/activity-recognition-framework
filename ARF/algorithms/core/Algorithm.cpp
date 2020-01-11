@@ -20,7 +20,7 @@
 
 #include <stack>
 #include "Algorithm.h"
-#include "../../dataStructures/MatrixView.h"
+#include "../../dataStructures/DataIterator2D.h"
 #include "../../dataStructures/Data.h"
 
 namespace ARF {
@@ -50,7 +50,7 @@ Data * Algorithm::ExecutePipeline(Algorithm * root, Data * inputData) {
 	//add input data to data stack
 	Data * input = inputData->clone();
 	dataStack.push(SharedDataPtr(input));
-		
+
 	while (!algorithmStack.empty()) {
 		
 		//get top algorithm and remove it from the stack

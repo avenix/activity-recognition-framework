@@ -49,7 +49,7 @@ private:
 	 @return a pointer to the retrieved SensorSample
 	 */
 	SensorSample * getNotificationSample() const{
-
+		
 		int eventIdx = ringBuffer->getEndIdx() - notificationOffset - 1;
 		if (eventIdx < 0) {
 			eventIdx += ringBuffer->getCapacity();
@@ -62,39 +62,37 @@ public:
 	/**
 	 Main constructor of the ring buffer
 	 
-	 @param numRows the number of sensor readings the ring buffer should store
+	 @param ringBuffer the pre-allocated ring buffer
 	 @param notificationInterval the number of samples between notifications emitted by the ringBuffer
 	 @param notificationOffset the number of samples after which the ringBuffer emits the first notification
 	 */
-	RingBufferAlgorithm(RingBuffer<SensorSample> * ringBuffer, UINT numRows, UINT notificationInterval = 1,
-							  UINT notificationOffset = 0) : RingBufferAlgorithm(numRows,notificationInterval,notificationOffset) {
-		ringBuffer = ringBuffer;
-	}
-	
-	/**
-	 Main constructor of the ring buffer
-	 
-	 @param numRows the number of sensor readings the ring buffer should store
-	 @param notificationInterval the number of samples between notifications emitted by the ringBuffer
-	 @param notificationOffset the number of samples after which the ringBuffer emits the first notification
-	 */
-	RingBufferAlgorithm(UINT numRows, UINT notificationInterval = 1,
-							  UINT notificationOffset = 0) : notificationInterval(notificationInterval), notificationOffset(notificationOffset), notificationCount(0){
-		
-		if (numRows == 0){
-			throw ARFException("RingBuffer::RingBuffer() numRows should not be zero");
-		}
-		
+	RingBufferAlgorithm(RingBuffer<SensorSample> * ringBuffer, UINT notificationInterval = 1,
+							  UINT notificationOffset = 0) : ringBuffer(ringBuffer),
+	notificationInterval(notificationInterval), notificationOffset(notificationOffset), notificationCount(0) {
 		
 		if (notificationInterval < 1){
 			throw ARFException("RingBuffer::RingBuffer() notificationInterval should be bigger than 1");
 		}
 		
-		if(notificationOffset < 0 || notificationOffset > numRows){
-			throw ARFException("RingBuffer::RingBuffer() eventOffset should be in the range: [0,numRows]");
+		if(notificationOffset < 0 || notificationOffset > ringBuffer->getCapacity()){
+			throw ARFException("RingBuffer::RingBuffer() eventOffset should be in the range: [0,ringBuffer->getCapacity()]");
 		}
+	}
+	
+	/**
+	 Main constructor of the ring buffer, that allocates memory for the ring buffer itself
+	 
+	 @param numElements the number of sensor readings the ring buffer should store
+	 @param notificationInterval the number of samples between notifications emitted by the ringBuffer
+	 @param notificationOffset the number of samples after which the ringBuffer emits the first notification
+	 */
+	RingBufferAlgorithm(UINT numElements, UINT notificationInterval = 1,
+							  UINT notificationOffset = 0) :
+	RingBufferAlgorithm(new RingBuffer<SensorSample>(numElements),notificationInterval,notificationOffset){
 		
-		ringBuffer = new RingBuffer<SensorSample>(numRows);
+		if (numElements == 0){
+			throw ARFException("RingBuffer::RingBuffer() numElements should not be zero");
+		}
 	}
 	
 	/**
@@ -115,7 +113,7 @@ public:
 		notificationCount++;
 		if(notificationCount == notificationInterval){
 			notificationCount = 0;
-
+			
 			//check if there are enough samples in the buffer
 			if(notificationOffset < ringBuffer->getSize()) {
 				

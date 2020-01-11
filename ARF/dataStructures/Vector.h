@@ -37,7 +37,7 @@
 namespace ARF {
 
 template <typename T>
-class Vector : public Data{
+class Vector : public Data, public Iterable<T>{
 private:
 	std::vector<T> data; ///< The vector containing the data
 	
@@ -63,7 +63,7 @@ public:
 	 @param rhs the Vector from which the values will be copied
 	 */
 	Vector(const Vector &rhs){
-		unsigned int N = rhs.size();
+		unsigned int N = rhs.getSize();
 		if( N > 0 ){
 			resize(N);
 			std::copy(rhs.begin(), rhs.end(), data.begin());
@@ -108,7 +108,7 @@ public:
 	 */
 	Vector& operator=(const Vector &rhs){
 		if(this != &rhs){
-			UINT N = rhs.size();
+			UINT N = rhs.getSize();
 			if(N > 0){
 				resize(N);
 				std::copy( rhs.begin(), rhs.end(), data.begin() );
@@ -154,7 +154,7 @@ public:
 	 @param idx the vector index of the element that should be returned
 	 @return returns the value at index idx
 	 */
-	inline const T& operator[](const unsigned int idx) const{
+	inline const T& operator[](const unsigned int idx) const override{
 		return data[idx];
 	}
 	
@@ -173,7 +173,7 @@ public:
 	 */
 	virtual bool resize(const unsigned int newSize){
 		data.resize(newSize);
-		return size() == newSize;
+		return getSize() == newSize;
 	}
 
 	/**
@@ -185,7 +185,7 @@ public:
 	 */
 	virtual bool resize(const unsigned int newSize, const T &value){
 		data.resize(newSize, value);
-		return size() == newSize;
+		return getSize() == newSize;
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public:
 	virtual bool copy(const Vector<T> &rhs){
 		
 		if(this != &rhs){
-			unsigned int N = rhs.size();
+			unsigned int N = rhs.getSize();
 			if( N > 0 ){
 				resize(N);
 				std::copy( rhs.begin(), rhs.end(), data.begin() );
@@ -269,7 +269,7 @@ public:
 	 */
 	bool fill(const T &value){
 		
-		if(size() == 0) return false;
+		if(getSize() == 0) return false;
 		
 		std::fill(data.begin(),data.end(),value);
 		
@@ -291,7 +291,9 @@ public:
 	 
 	 @return returns the size of the Vector
 	 */
-	inline UINT size() const{ return static_cast<UINT>(data.size()); }
+	inline UINT getSize() const override {
+		return static_cast<UINT>(data.size());
+	}
 	
 	/**
 	 Gets a pointer to the first element in the vector
@@ -299,7 +301,7 @@ public:
 	 @return returns a pointer to the raw data
 	 */
 	T* getData() {
-		if(size() == 0) return NULL;
+		if(getSize() == 0) return NULL;
 		return &(data)[0];
 	}
 	
@@ -309,7 +311,7 @@ public:
 	 @return returns a pointer to the raw data
 	 */
 	const T* getData() const {
-		if(size() == 0 ) return NULL;
+		if(getSize() == 0 ) return NULL;
 		return &(data)[0];
 	}
 	

@@ -20,7 +20,6 @@
  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
  */
 
 #ifndef ARFTypedefs_h
@@ -37,18 +36,33 @@ typedef float Float;
 
 typedef unsigned int UINT;
 
-typedef Vector<Float> SensorSample;
 
-typedef Matrix<Float> MatrixFloat;
+//Activity Recognition Chain types:
+//Data Acquisition -> Preprocessing -> Feature Extraction -> Classification
+//SensorSample -> Signal -> Feature -> FeatureVector -> ClassificationResult
+typedef Vector<Float> SensorSample; //A single sensor reading (e.g. ax,ay,az,gx,gy,gz)
+
+typedef Vector<Float> Signal;//A one-dimensional signal (e.g. several ax readings)
+
+typedef Float Feature;//A feature describing a Signal (e.g. the mean of a Signal)
+
+typedef Vector<Float> FeatureVector;//A vector of features (e.g. mean, std, corr)
+
+typedef uint8_t ClassificationResult;//the result of a classifier (e.g. running)
 
 //interfaces
-class Signal
-{
+template <typename T> class Iterable {
 public:
-	virtual ~Signal() {}
-	virtual const Float& operator[](const UINT idx) const = 0;
-	virtual UINT size() const = 0;
+	virtual const T& operator[](const UINT idx) const = 0;
+	virtual UINT getSize() const = 0;
 };
+
+template <typename T> class Iterable2D {
+public:
+	virtual const T& operator()(const UINT rowIdx, const UINT colIdx) const = 0;
+	virtual UINT getSize() const = 0;
+};
+
 }
 
 #endif /* ARFTypedefs_h */

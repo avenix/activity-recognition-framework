@@ -32,7 +32,7 @@
 
 namespace ARF {
 
-template <class T> class Matrix : public Data{
+template <class T> class Matrix : public Data, public Iterable2D<T>{
 public:
 	/**
 	 Default Constructor
@@ -93,7 +93,7 @@ public:
 	 
 	 @param data: the input data which will be copied to this Matrix instance
 	 */
-	Matrix( const Vector<Vector<T>> &data ){
+	Matrix(const Vector<Vector<T>> &data){
 		this->dataPtr = NULL;
 		this->rowPtr = NULL;
 		this->rows = 0;
@@ -176,6 +176,16 @@ public:
 	 */
 	inline const T* operator[](const unsigned int r) const{
 		return rowPtr[r];
+	}
+	
+	/**
+	 Returns a const pointer to the data at row r
+	 
+	 @param r: the index of the row you want, should be in the range [0 rows-1]
+	 @return a const pointer to the data at row r
+	 */
+	inline const T* operator()(const UINT rowIdx, const UINT colIdx) const override{
+		return rowPtr[rowIdx][colIdx];
 	}
 	
 	/**
@@ -464,7 +474,7 @@ public:
 	 
 	 @return returns the number of columns in the Matrix
 	 */
-	inline unsigned int getSize() const{ return size; }
+	inline UINT getSize() const override{ return size; }
 	
 	/**
 	 Gets a pointer to the row buffer

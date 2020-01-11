@@ -30,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dataStructures/Value.h"
 #include "dataStructures/Vector.h"
 #include "dataStructures/Matrix.h"
-#include "dataStructures/MatrixView.h"
+#include "dataStructures/DataIterator2D.h"
 #include "dataStructures/RingBuffer.h"
 
 //include the typedefs
@@ -53,7 +53,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "algorithms/4-featureExtraction/Mean.h"
 
 //include the utility files
-#include "algorithms/other/MatrixSelector.h"
-#include "algorithms/other/RingBufferSelector.h"
+#include "algorithms/other/DataSelector.h"
 
 #endif /* ARF_h */

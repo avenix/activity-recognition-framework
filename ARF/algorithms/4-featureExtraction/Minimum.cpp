@@ -19,7 +19,7 @@
  */
 
 #include "Minimum.h"
-#include "../../dataStructures/MatrixView.h"
+#include "../../dataStructures/DataIterator2D.h"
 #include "../../dataStructures/Vector.h"
 #include "../../dataStructures/Value.h"
 
@@ -36,7 +36,7 @@ Data* Minimum::execute(Data * data) {
 	
 	Float minimum = (*signal)[0];
 	
-	for(int i = 0 ; i < signal->size() ; i++){
+	for(int i = 0 ; i < signal->getSize() ; i++){
 		Float value = (*signal)[i];
 		if (value < minimum){
 			minimum = value;

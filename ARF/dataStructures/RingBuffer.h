@@ -33,7 +33,7 @@
 namespace ARF {
 
 template <typename T>
-class RingBuffer {
+class RingBuffer : public Iterable<T>{
 	
 private:
 	T * data; ///< The pointer containing the data
@@ -41,7 +41,6 @@ private:
 	UINT capacity; ///< The capacity of the RingBuffer
 	UINT endIdx; ///< The index of the last element in the RingBuffer
 
-	
 public:
 	
 	/**
@@ -63,7 +62,8 @@ public:
 	 
 	 @param rhs the ringBuffer that will be copied
 	 */
-	RingBuffer(const RingBuffer & rhs) : capacity(rhs.getCapacity()), size(rhs.getSize()), endIdx(rhs.getEndIdx()){
+	RingBuffer(const RingBuffer & rhs) : capacity(rhs.getCapacity()),
+	size(rhs.getSize()), endIdx(rhs.getEndIdx()){
 		data = new T[capacity];
 		std::copy(rhs.begin(),rhs.end(),data);
 	}
@@ -73,6 +73,9 @@ public:
 	 */
 	~RingBuffer(){
 		delete[] data;
+		size = 0;
+		capacity = 0;
+		endIdx = 0;
 	}
 	
 	/**
@@ -89,7 +92,7 @@ public:
 	 @param idx the vector index of the element that should be returned
 	 @return returns the value at index idx
 	 */
-	inline const T& operator[](const UINT idx) const{
+	inline const T& operator[](const UINT idx) const override{
 		return getElementAtIdx(idx);
 	}
 	
@@ -119,14 +122,14 @@ public:
 	 
 	 @return the size of the RingBuffer
 	 */
-	inline UINT getSize() const{
+	inline UINT getSize() const override{
 		return size;
 	}
 	
 	/**
-	 Retrieves the amount of elements in the RingBuffer
+	 Retrieves the amount of elements the RingBuffer is able to hold
 	 
-	 @return the size of the RingBuffer
+	 @return the capacity of the RingBuffer
 	 */
 	inline UINT getCapacity() const{
 		return capacity;
