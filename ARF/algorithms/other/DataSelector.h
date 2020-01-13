@@ -32,38 +32,23 @@
 
 namespace ARF {
 
-template <typename T>
 class DataSelector : public Algorithm {
 	
 private:
-	Iterable<T> * iterable;
-	
-	IterableRange iterableRange;
-	IterableRange2D iterableRange2D;
-	
-	bool use2DRange;
+	Iterable<SensorSample> * iterable;
+	IterableRange2D iterableRange;
 	
 public:
-	/**
-	 Main constructor for the DataSelector to return elements from a 1D iterator
-	 
-	 @param iterable The collection that will be accessed
-	 @param startIdx The first index that should be accessed in the ringBuffer
-	 @param nElements The number of elements that should returned from ringBuffer
-	 */
-	DataSelector(Iterable<T> * iterable, const UINT startIdx, const UINT nElements) :
-	iterable(iterable), iterableRange(startIdx,nElements), use2DRange(false) { }
-	
+
 	/**
 	 Main constructor for the DataSelector to return elements from a 2D iterator
 	 
-	 @param iterable The collection that will be accessed
+	 @param iterable The collection of SensorSamples that will be accessed
 	 @param startRow The first row that should be accessed in the 2D iterator
 	 @param endRow The last row that should returned in the 2D iterator
 	 @param columnIndices The columns to be returned
 	 */
-	DataSelector(Iterable<T> * iterable, UINT startRow, UINT endRow, const std::vector<uint8_t> &columnIndices) :
-	iterable(iterable), iterableRange2D(startRow,endRow,columnIndices), use2DRange(true){ }
+	DataSelector(Iterable<SensorSample> * iterable, const UINT startRow, const UINT endRow, const std::vector<uint8_t> &columnIndices) : iterable(iterable), iterableRange(startRow, endRow, columnIndices){ }
 	
 	/**
 	 Returns a DataIterator that can access a selection of the data in the container defined in the 'iterable' property,
@@ -73,18 +58,7 @@ public:
 	 @return A DataIterator object
 	 */
 	Data * execute(Data * data) override {
-		//Iterable<T> * it = (iterable == nullptr) ? (Iterable<T> *) data : iterable;
-		
-		if(iterable->getSize() < iterableRange.nElements){
-			throw ARFException("DataSelector::execute() cannot retrieve more elements than available in the container\n");
-			return nullptr;
-		}
-		
-		if(use2DRange){
-			return new DataIterator2D<T>(iterable, iterableRange2D);
-		} else {
-			return new DataIterator<T>(iterable, iterableRange.startIdx, iterableRange.nElements);
-		}
+			return new DataIterator2D(iterable, iterableRange.startRow, iterableRange.endRow,iterableRange.columnIndices);
 	}
 };
 

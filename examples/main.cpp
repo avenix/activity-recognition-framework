@@ -36,12 +36,13 @@ int main(int argc, const char * argv[]) {
 	//auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer,301,1,201);
 	auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer,2);
 	//auto sampleSelector = DataSelector<SensorSample>(&ringBuffer,1,1);//startIdx = 0, nSamples = 1
-	auto elementSelector = DataSelector<Float>(0,1,1,std::vector<int>{2});//startIdx = 0, nSamples = 1
+	auto columnIndices = std::vector<uint8_t>{2};
+	auto elementSelector = DataSelector(&ringBuffer,1,1,columnIndices);//startIdx = 0, nSamples = 1
 	//auto magnitude = Magnitude();
 	//auto peakDetector = new PeakDetector(0.8, 100);
 	
 	//build pipeline
-	ringBufferAlgorithm << sampleSelector << elementSelector;
+	ringBufferAlgorithm << elementSelector;
 	
 	//execute pipeline
 	SensorSample data = SensorSample(std::vector<float>{1.0,2.0,3.0});
@@ -51,8 +52,8 @@ int main(int argc, const char * argv[]) {
 	//dataSet.load("../data/S1.txt");
 	
 	Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data);
-	DataIterator<Float> * output = (DataIterator<Float> *) Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data2);
-	Float sample = (*output)[0];
+	DataIterator2D * output = (DataIterator2D *) Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data2);
+	Float sample = (*output)(0,0);
 	
 	//will return a sample
 	std::cout << sample << std::endl;

@@ -1,6 +1,6 @@
 /**
  @file
- @author  Juan Haladjian <juan.haladjian@gmail.com>
+ @author Juan Haladjian <juan.haladjian@gmail.com>
  @brief The MatrixView is a pointer to a portion of a Matrix. This makes it possible to pass references of data instead of copying the data
  
  ARF MIT License
@@ -28,6 +28,7 @@
 #import <vector>
 #include "Data.h"
 #include "../utils/ARFTypedefs.h"
+#include "../utils/ARFException.h"
 
 namespace ARF {
 
@@ -36,7 +37,7 @@ struct IterableRange2D {
 	UINT endRow;
 	std::vector<uint8_t> columnIndices;
 	
-	IterableRange2D(UINT startRow, UINT endRow) :
+	IterableRange2D(UINT startRow=0, UINT endRow=0) :
 	startRow(startRow), endRow(endRow){ }
 	
 	IterableRange2D(UINT startRow, UINT endRow,
@@ -44,24 +45,23 @@ struct IterableRange2D {
 	startRow(startRow), endRow(endRow), columnIndices(columnIndices) { }
 };
 
-template <typename T>
-class DataIterator2D : public Data {
-	
+class DataIterator2D : public Data, public Iterable2D<Float> {
+
 private:
-	const Iterable<T> * iterable; ///< The iterable that will be accessed
+	const Iterable<SensorSample> * iterable; ///< The iterable that will be accessed
 	IterableRange2D iterableRange;
 	
 public:
 	
-	DataIterator2D(Iterable<T> * matrix, UINT startRow, UINT endRow, const std::vector<uint8_t> &columnIndices) :
+	DataIterator2D(Iterable<SensorSample> * iterable, UINT startRow, UINT endRow, const std::vector<uint8_t> &columnIndices) :
 	iterable(iterable), iterableRange({startRow, endRow, columnIndices}){
 	}
 	
-	DataIterator2D(Iterable<T> * matrix, IterableRange2D iterableRange) :
+	DataIterator2D(Iterable<SensorSample> * iterable, IterableRange2D iterableRange) :
 	iterable(iterable), iterableRange(iterableRange){
 	}
 	
-	DataIterator2D(const DataIterator2D<T> & rhs) :
+	DataIterator2D(const DataIterator2D & rhs) :
 	iterable(rhs.getIterable()), iterableRange(rhs.getIterableRange()){
 	}
 	
@@ -69,15 +69,15 @@ public:
 	 Clones the data object
 	 @return the cloned object
 	 */
-	DataIterator2D<T> * clone() override {
+	Data * clone() override {
 		return new DataIterator2D(*this);
 	}
 	
-	const Iterable<T> * getIterable() const{
+	const Iterable<SensorSample> * getIterable() const{
 		return iterable;
 	}
 	
-	const IterableRange2D& getMatrixRange() const{
+	const IterableRange2D& getIterableRange() const{
 		return iterableRange;
 	}
 	
@@ -90,20 +90,20 @@ public:
 		iterableRange.endRow = newEndRow;
 	}
 	
-	UINT getStartRow(){
+	UINT getStartRow() const{
 		return iterableRange.startRow;
 	}
 	
-	UINT getEndRow(){
+	UINT getEndRow() const{
 		return iterableRange.endRow;
 	}
 	
-	UINT getNumRows() {
+	UINT getNumRows() const {
 		return iterableRange.endRow - iterableRange.startRow + 1;
 	}
 	
-	UINT getNumColumns() {
-		return iterableRange.columnIndices.size();
+	UINT getNumColumns() const{
+		return (UINT) iterableRange.columnIndices.size();
 	}
 	
 	/**
@@ -111,21 +111,60 @@ public:
 	 
 	 @return the number of elements that will be accessed
 	 */
-	inline UINT getSize() const{
+	inline UINT getSize() const override{
 		return getNumRows() * getNumColumns();
 	}
 	
 	/**
-	 Returns a pointer to the data at row r
+	 Returns a reference to the data at (rowIdx, colIdx)
 	 
 	 @param rowIdx the index of the row, should be in the range [0 rows)
 	 @param colIdx the index of the column, should be in the range [0 columns)
-	 @return a pointer to the data at row r
+	 @return a reference to the data at (rowIdx,colIdx)
 	 */
-	inline const T& operator()(const UINT rowIdx, const UINT colIdx) const override {
+	inline const Float& operator()(const UINT rowIdx, const UINT colIdx) const override {
+		return getDataAtIdx(rowIdx, colIdx);
+	}
+	
+	/**
+	 Returns the value at the input index
+	 
+	 @param rowIdx the vector index of the element that should be returned
+	 @return returns the value at index idx
+	 */
+	const Float& getDataAtIdx(const UINT rowIdx, const UINT colIdx) const {
 		UINT iterableRowIdx = rowIdx + iterableRange.startRow;
 		UINT iterableColumnIdx = iterableRange.columnIndices[colIdx];
-		return iterable[iterableRowIdx][iterableColumnIdx];
+		return (*iterable)[iterableRowIdx][iterableColumnIdx];
+	}
+	
+	/**
+	 Returns the value at the input index
+	 
+	 @param idx the vector index of the element that should be returned
+	 @return returns the value at index idx
+	 */
+	const Float& operator[](const UINT idx) const{
+		return getDataAtIdx(idx);
+	}
+	
+	/**
+	 Returns the value at the input index
+	 
+	 @param idx the vector index of the element that should be returned
+	 @return returns the value at index idx
+	 */
+	const Float& getDataAtIdx(const UINT idx) const {
+		
+		if(getNumRows() == 1){
+			UINT columnIdx = iterableRange.columnIndices[idx];
+			return (*iterable)[iterableRange.startRow][columnIdx];
+		} else if(getNumColumns() == 1){
+			UINT columnIdx = iterableRange.columnIndices[0];
+			return (*iterable)[iterableRange.startRow + idx][columnIdx];
+		} else {
+			throw ARFException("DataIterator::getDataAtIdx() when accessing data with a single index, the iterable range should be a column vector or a row vector");
+		}
 	}
 };
 

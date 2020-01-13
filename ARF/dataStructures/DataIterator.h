@@ -41,13 +41,13 @@ struct IterableRange {
 	 @param startIdx the starting index to be accessed
 	 @param nElements the number of elements to be accessed
 	 */
-	IterableRange(UINT startIdx, UINT nElements) :
+	IterableRange(UINT startIdx = 0, UINT nElements = 0) :
 	startIdx(startIdx), nElements(nElements){ }
 };
 
 template <typename T>
 class DataIterator : public Data {
-	
+
 private:
 	const Iterable<T> * iterable; ///< The iterable that will be accessed
 	IterableRange iterableRange; ///< The range of values to access
@@ -67,7 +67,7 @@ public:
 	 Clones the data object
 	 @return the cloned object
 	 */
-	DataIterator * clone() override {
+	Data * clone() override {
 		return new DataIterator(*this);
 	}
 	
