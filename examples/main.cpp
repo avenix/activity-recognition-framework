@@ -27,36 +27,46 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ARF.h"
 #include "DataSet.h"
 
+#include <iostream>
+using namespace std;
+
 using namespace ARF;
 
 int main(int argc, const char * argv[]) {
 	
-	//instantiate algorithms
+	//ring buffer able to hold 301 elements
 	auto ringBuffer = RingBuffer<SensorSample>(301);
-	//auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer,301,1,201);
-	auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer,2);
-	//auto sampleSelector = DataSelector<SensorSample>(&ringBuffer,1,1);//startIdx = 0, nSamples = 1
-	auto columnIndices = std::vector<uint8_t>{2};
-	auto elementSelector = DataSelector(&ringBuffer,1,1,columnIndices);//startIdx = 0, nSamples = 1
-	//auto magnitude = Magnitude();
+	auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer);//1,201
+
+	//select ax,ay,az
+	auto columnIndices = Vector<uint8_t>(3,0);
+	columnIndices[1] = 1;
+	columnIndices[2] = 2;
+	auto dataSelector = DataSelector(&ringBuffer,0,0,columnIndices);
+
+	//magnitude of ax,ay,az
+	auto magnitude = Magnitude();
+	
 	//auto peakDetector = new PeakDetector(0.8, 100);
 	
 	//build pipeline
-	ringBufferAlgorithm << elementSelector;
+	ringBufferAlgorithm << dataSelector << magnitude;
 	
 	//execute pipeline
-	SensorSample data = SensorSample(std::vector<float>{1.0,2.0,3.0});
-	SensorSample data2 = SensorSample(std::vector<float>{4.0,5.0,6.0});
+	//SensorSample sample1 = SensorSample(std::vector<float>{1.0,2.0,3.0});
+	//SensorSample sample2 = SensorSample(std::vector<float>{4.0,5.0,6.0});
 	
-	//DataSet dataSet(16,"GoalkeeperDataSet","9-axis IMU data + linear acceleration + quaternion");
-	//dataSet.load("../data/S1.txt");
+	//load some data
+	DataSet dataset = DataSet("data2.txt",true);
 	
-	Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data);
-	DataIterator2D * output = (DataIterator2D *) Algorithm::ExecutePipeline(&ringBufferAlgorithm,&data2);
-	Float sample = (*output)(0,0);
-	
-	//will return a sample
-	std::cout << sample << std::endl;
+	//execute algorithm for each sample
+	for(int i = 0 ; i < dataset.getNumSamples() ; i++){
+		
+		SensorSample sample = dataset[i];
+		auto output = (Value *) Algorithm::ExecutePipeline(&ringBufferAlgorithm,&sample);
+		
+		std::cout << output->getValue() << std::endl;
+	}
 	
 	return 0;
 }

@@ -33,6 +33,7 @@
 #include <algorithm>    // std::copy
 #include <vector>
 #include "../utils/ARFTypedefs.h"
+#include "../utils/ARFException.h"
 
 namespace ARF {
 
@@ -101,6 +102,14 @@ public:
 	}
 	
 	/**
+	 Increase the capacity of the vector
+	 @param newCapacity the new capacity of the vector
+	 */
+	void reserve(const UINT newCapacity){
+		data.reserve(newCapacity);
+	}
+	
+	/**
 	 Defines how the data from the rhs Vector should be copied to this Vector
 	 
 	 @param rhs another instance of a Vector
@@ -144,7 +153,7 @@ public:
 	 @param idx the vector index of the element that should be returned
 	 @return returns the value at index idx
 	 */
-	inline T& operator[](const unsigned int idx){
+	inline T& operator[](const UINT idx){
 		return data[idx];
 	}
 	
@@ -154,10 +163,11 @@ public:
 	 @param idx the vector index of the element that should be returned
 	 @return returns the value at index idx
 	 */
-	inline const T& operator[](const unsigned int idx) const override{
+	inline const T& operator[](const UINT idx) const override{
 		return data[idx];
 	}
-	
+
+		
 	/**
 	 Erases the content of the vector
 	 */
@@ -291,7 +301,7 @@ public:
 	 
 	 @return returns the size of the Vector
 	 */
-	inline UINT getSize() const override {
+	inline UINT getSize() const override{
 		return static_cast<UINT>(data.size());
 	}
 	

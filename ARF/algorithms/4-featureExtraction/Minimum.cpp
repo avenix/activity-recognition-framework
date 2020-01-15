@@ -19,7 +19,7 @@
  */
 
 #include "Minimum.h"
-#include "../../dataStructures/DataIterator2D.h"
+#include "../../dataStructures/DataIterator.h"
 #include "../../dataStructures/Vector.h"
 #include "../../dataStructures/Value.h"
 

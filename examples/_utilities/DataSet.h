@@ -27,11 +27,18 @@
 #define ARF_DATA_SET_H
 
 #include <string>
-#include "utils/ARFTypedefs.h"
-#include "dataStructures/Vector.h"
+#include "ARF.h"
 
 class DataSet{
 public:
+	
+	/**
+	 Constructor, creates a data set with the data already loaded. Uses the fileName as datasetName
+	 
+	 @param fileName the name of the file to load
+	 @param parseColumnHeader whether the first row of the data file is a header containing the names of the columns
+	 */
+	DataSet(const std::string &fileName, const bool parseColumnHeader = false);
 	
 	/**
 	 Constructor, sets the name of the dataset and the number of dimensions of the training data.
@@ -42,7 +49,7 @@ public:
 	 @param infoText some info about the data in this dataset, this can contain spaces
 	 */
 	DataSet(const ARF::UINT numDimensions, const std::string & datasetName, const std::string & infoText);
-	
+		
 	/**
 	 Copy Constructor, copies the ClassificationData from the rhs instance to this instance
 	 @param rhs another instance of the ClassificationData class from which the data will be copied to this instance
@@ -65,7 +72,7 @@ public:
 	/**
 	 Saves the classification data to a file.
 	 If the file format ends in '.csv' then the data will be saved as comma-seperated-values, otherwise it will be saved
-	 to a custom GRT file (which contains the csv data with an additional header).
+	 to a custom ARK file (which contains the csv data with an additional header).
 	 
 	 @param filename the name of the file the data will be saved to
 	 @return true if the data was saved successfully, false otherwise
@@ -74,13 +81,12 @@ public:
 	
 	/**
 	 Load the classification data from a file.
-	 If the file format ends in '.csv' then the function will try and load the data from a csv format.  If this fails then it will
-	 try and load the data as a custom GRT file.
+	 If the file format ends in '.csv' or '.txt' then the function will try and load the data from a csv format. If this fails then it   will try and load the data as a custom ARK file.
 	 
 	 @param filename the name of the file the data will be loaded from
 	 @return true if the data was loaded successfully, false otherwise
 	 */
-	bool load(const std::string &filename);
+	bool load(const std::string &filename, const bool parseColumnHeader = false);
 	
 	/**
 	 Saves the labelled classification data to a custom file format.
@@ -110,14 +116,11 @@ public:
 	/**
 	 Loads the labelled classification data from a CSV file.
 	 This assumes the data is formatted with each row representing a sample.
-	 The class label should be the first column followed by the sample data as the following N columns, where N is the number of dimensions in the data.
-	 If the class label is not the first column, you should set the 2nd argument (UINT classLabelColumnIndex) to the column index that contains the class label.
 	 
 	 @param filename the name of the file the data will be loaded from
-	 @param classLabelColumnIndex the index of the column containing the class label. Default value = 0
 	 @return true if the data was loaded successfully, false otherwise
 	 */
-	bool loadDatasetFromCSVFile(const std::string &filename,const ARF::UINT classLabelColumnIndex = 0);
+	bool loadDatasetFromCSVFile(const std::string &filename, const bool parseColumnHeader=false);
 	
 	/**
 	 Prints the dataset info (such as its name and infoText) and the stats (such as the number of examples, number of dimensions, number of classes, etc.)
@@ -196,12 +199,36 @@ public:
 	 @return true if the infoText was correctly updated, false otherwise
 	 */
 	bool setInfoText(const std::string &infoText);
+
+	
+	/**
+	 Array Subscript Operator, returns the ClassificationSample at index i.
+	 It is up to the user to ensure that i is within the range of [0 totalNumSamples-1]
+
+	 @param i: the index of the training sample you want to access.  Must be within the range of [0 totalNumSamples-1]
+	 @return a reference to the i'th ClassificationSample
+	*/
+	inline ARF::SensorSample& operator[] (const ARF::UINT &i){
+		 return data[i];
+	}
+
+	/**
+	 Const Array Subscript Operator, returns the ClassificationSample at index i.
+	 It is up to the user to ensure that i is within the range of [0 totalNumSamples-1]
+
+	 @param i: the index of the training sample you want to access.  Must be within the range of [0 totalNumSamples-1]
+	 @return a const reference to the i'th ClassificationSample
+	*/
+	inline const ARF::SensorSample& operator[] (const ARF::UINT &i) const{
+		 return data[i];
+	}
 	
 private:
 	std::string datasetName;   ///< The name of the dataset
 	std::string infoText;        ///< Some infoText about the dataset
 	ARF::UINT numDimensions;		///< The number of dimensions in the dataset
 	ARF::UINT totalNumSamples;     ///< The total number of samples in the dataset
+	ARF::Vector<std::string> columnNames;     ///< The names of each column
 	ARF::Vector<ARF::SensorSample> data;  ///< The actual data
 };
 

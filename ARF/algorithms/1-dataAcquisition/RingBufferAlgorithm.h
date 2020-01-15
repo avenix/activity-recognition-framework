@@ -33,6 +33,10 @@
 #include "../../utils/ARFTypedefs.h"
 #include "../../dataStructures/RingBuffer.h"
 
+//remove!
+#include <iostream>
+using namespace std;
+
 namespace ARF {
 
 class RingBufferAlgorithm : public Algorithm {
@@ -55,7 +59,9 @@ private:
 			eventIdx += ringBuffer->getCapacity();
 		}
 		
-		return new SensorSample(ringBuffer->getElementAtIdx(eventIdx));
+		//cout << eventIdx << endl;
+		SensorSample sample = ringBuffer->getElementAtIdx(eventIdx);
+		return new SensorSample(sample);
 	}
 	
 public:

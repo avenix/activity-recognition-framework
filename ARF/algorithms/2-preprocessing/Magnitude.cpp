@@ -24,6 +24,9 @@
 #include "../../dataStructures/Matrix.h"
 #include <cmath>
 
+#include "../../dataStructures/DataIterator.h"
+#include "../../utils/ARFTypedefs.h"
+
 namespace ARF {
 
 /**
@@ -33,9 +36,9 @@ namespace ARF {
  @return The magnitude of the input vector
  */
 Data* Magnitude::execute(Data * data) {
-	Signal * signal = (Signal*) data;
-	
-	Float result = std::sqrt((*signal)[0] * (*signal)[1] * (*signal)[2]);
+	const DataIterator& signal = *(DataIterator*) data;
+	//Float result = std::sqrt(signal->getDataAtIdx(0) * signal->getDataAtIdx(1) * signal->getDataAtIdx(2));
+	Float result = std::sqrt(signal[0] * signal[0] + signal[1] * signal[1] + signal[2] * signal[2]);
 	
 	return new Value(result);
 }

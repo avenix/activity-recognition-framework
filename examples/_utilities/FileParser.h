@@ -30,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sstream>
 #include <deque>
 #include "../dataStructures/Vector.h"
-
+#include "../utils/ARFTypedefs.h"
 
 class FileParser{
 public:
@@ -85,11 +85,11 @@ public:
         const unsigned int N = (unsigned int)row.length();
         if( N == 0 ) return false;
        
-		 /*
-        size_t lastSize = cols.size();
+		 
+        ARF::UINT lastSize = cols.getSize();
         cols.clear();
-        if( lastSize > 0 ) cols.reserve( lastSize ); //Reserve the previous column size
-		 */
+        if( lastSize > 0 ) cols.reserve(lastSize); //Reserve the previous column size
+		 
 		 
         std::string columnString = "";
         const int sepValue = seperator;

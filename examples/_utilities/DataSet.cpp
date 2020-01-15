@@ -25,7 +25,13 @@
 #include "Util.h"
 #include "FileParser.h"
 
-DataSet::DataSet(const ARF::UINT numDimensions, const std::string & datasetName, const std::string & infoText) : datasetName(datasetName),numDimensions(numDimensions), infoText(infoText), totalNumSamples(0){
+
+DataSet::DataSet(const std::string &fileName, const bool loadHeader) : datasetName(fileName), infoText("")
+{
+	load(fileName,loadHeader);
+}
+
+DataSet::DataSet(const ARF::UINT numDimensions, const std::string & datasetName, const std::string & infoText) : datasetName(datasetName), numDimensions(numDimensions), infoText(infoText), totalNumSamples(0){
 	
 	if(numDimensions > 0) {
 		setNumDimensions(numDimensions);
@@ -45,7 +51,7 @@ DataSet& DataSet::operator=(const DataSet &rhs){
 		infoText = rhs.infoText;
 		numDimensions = rhs.numDimensions;
 		totalNumSamples = rhs.totalNumSamples;
-		
+		columnNames = rhs.columnNames;
 		data = rhs.data;
 	}
 	return *this;
@@ -53,6 +59,7 @@ DataSet& DataSet::operator=(const DataSet &rhs){
 
 void DataSet::clear(){
 	totalNumSamples = 0;
+	columnNames.clear();
 	data.clear();
 }
 
@@ -92,22 +99,22 @@ bool DataSet::setInfoText(const std::string &rhs){
 bool DataSet::save(const std::string &filename) const{
 	
 	//Check if the file should be saved as a csv file
-	if(Util::stringEndsWith(filename, ".csv")){
+	if(Util::stringEndsWith(filename, ".csv") || Util::stringEndsWith(filename, ".txt")){
 		return saveDatasetToCSVFile(filename);
 	}
 	
-	//Otherwise save it as a custom GRT file
-	return saveDatasetToFile( filename );
+	//Otherwise save it as a custom ARK file
+	return saveDatasetToFile(filename);
 }
 
-bool DataSet::load(const std::string &filename){
+bool DataSet::load(const std::string &filename,const bool parseColumnHeader){
 	
 	//Check if the file should be loaded as a csv file
-	if(Util::stringEndsWith( filename, ".csv")){
-		return loadDatasetFromCSVFile( filename );
+	if(Util::stringEndsWith( filename, ".csv") || Util::stringEndsWith( filename, ".txt")){
+		return loadDatasetFromCSVFile(filename,parseColumnHeader);
 	}
 	
-	//Otherwise save it as a custom GRT file
+	//Otherwise load it from a custom ARK file
 	return loadDatasetFromFile(filename);
 }
 
@@ -120,15 +127,26 @@ bool DataSet::saveDatasetToFile(const std::string &filename) const{
 		return false;
 	}
 	
-	file << "DATA_FILE_V1.0\n";
 	file << "DatasetName: " << datasetName << std::endl;
 	file << "InfoText: " << infoText << std::endl;
 	file << "NumDimensions: " << numDimensions << std::endl;
 	file << "TotalNumSamples: " << totalNumSamples << std::endl;
-	file << "Data:\n";
+
+	//print the headers
+	file << "ColumnHeaders:\n";
+	for(ARF::UINT j=0; j < numDimensions; j++){
+		if(columnNames.getSize() < numDimensions){
+			file << "\t" << "col_" << j + 1;
+		} else {
+			file << "\t" << columnNames[j];
+		}
+	}
+	file << std::endl;
 	
-	for(ARF::UINT i=0; i<totalNumSamples; i++){
-		for(ARF::UINT j=0; j<numDimensions; j++){
+	//print data
+	file << "Data:\n";
+	for(ARF::UINT i = 0; i < totalNumSamples; i++){
+		for(ARF::UINT j = 0; j < numDimensions; j++){
 			file << "\t" << data[i][j];
 		}
 		file << std::endl;
@@ -148,7 +166,6 @@ bool DataSet::loadDatasetFromFile(const std::string &filename){
 		throw ARF::ARFException("loadDatasetFromFile(const std::string &filename) - could not open file!");
 		return false;
 	}
-	
 	
 	std::string word;
 	
@@ -171,37 +188,50 @@ bool DataSet::loadDatasetFromFile(const std::string &filename){
 	//Load the info text
 	file >> word;
 	infoText = "";
-	while( word != "NumDimensions:" ){
+	while(word != "NumDimensions:"){
 		infoText += word + " ";
 		file >> word;
 	}
 	
 	//Get the number of dimensions in the training data
-	if( word != "NumDimensions:" ){
+	if(word != "NumDimensions:"){
 		file.close();
 		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find NumDimensions header!");
 		return false;
 	}
 	file >> numDimensions;
 	
-	//Get the total number of training examples in the training data
+	//Get the total number of training samples
 	file >> word;
-	if( word != "TotalNumTrainingExamples:" && word != "TotalNumExamples:" ){
+	if(word != "TotalNumSamples:"){
 		file.close();
-		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find TotalNumTrainingExamples header!");
+		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find TotalNumSamples header!");
 		return false;
 	}
 	file >> totalNumSamples;
 	
-	//load the data
+	//Get the header
+	file >> word;
+	if(word != "ColumnHeaders:"){
+		file.close();
+		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find ColumnHeaders header!");
+		return false;
+	}
+	
+	columnNames.resize(numDimensions);
+	
+	for(ARF::UINT j = 0; j < numDimensions; j++){
+		file >> columnNames[j];
+	}
+	
+	//Load the data
 	ARF::SensorSample tempSample(numDimensions);
 	data.resize(totalNumSamples, tempSample);
 	
-	for(ARF::UINT i=0; i<totalNumSamples; i++){
-		ARF::UINT classLabel = 0;
+	for(ARF::UINT i = 0; i < totalNumSamples; i++){
 		ARF::SensorSample sample(numDimensions,0);
-		file >> classLabel;
-		for(ARF::UINT j=0; j<numDimensions; j++){
+		
+		for(ARF::UINT j = 0; j < numDimensions; j++){
 			file >> sample[j];
 		}
 		data[i] = sample;
@@ -221,12 +251,29 @@ bool DataSet::saveDatasetToCSVFile(const std::string &filename) const{
 		return false;
 	}
 	
-	//Write the data to the CSV file
-	for(ARF::UINT i=0; i<totalNumSamples; i++){
-		for(ARF::UINT j=0; j<numDimensions; j++){
-			file << "," << data[i][j];
+	//Write headers [0 n-1]
+	for(ARF::UINT j = 0; j < numDimensions - 1; j++){
+		if(columnNames.getSize() < numDimensions){
+			file << "col_" << j + 1<< ",";
+		} else {
+			file << columnNames[j] << ",";
 		}
-		file << std::endl;
+	}
+	
+	//Write headers [n]
+	if(columnNames.getSize() < numDimensions){
+		file << "col_" << numDimensions << std::endl;
+	} else {
+		file << columnNames[numDimensions - 1] << std::endl;
+	}
+	
+	
+	//Write the data to the CSV file
+	for(ARF::UINT i = 0; i < totalNumSamples; i++){
+		for(ARF::UINT j = 0; j < numDimensions - 1; j++){
+			file << data[i][j] << ",";
+		}
+		file << data[i][numDimensions-1] << std::endl;
 	}
 	
 	file.close();
@@ -234,11 +281,9 @@ bool DataSet::saveDatasetToCSVFile(const std::string &filename) const{
 	return true;
 }
 
-bool DataSet::loadDatasetFromCSVFile(const std::string &filename,const ARF::UINT classLabelColumnIndex){
+bool DataSet::loadDatasetFromCSVFile(const std::string &filename, bool parseColumnHeader){
 	
 	numDimensions = 0;
-	datasetName = "NOT_SET";
-	infoText = "";
 	
 	//Clear any previous data
 	clear();
@@ -247,41 +292,52 @@ bool DataSet::loadDatasetFromCSVFile(const std::string &filename,const ARF::UINT
 	FileParser parser;
 	
 	if(!parser.parseCSVFile(filename,true)){
-		throw ARF::ARFException("loadDatasetFromCSVFile(const std::string &filename,const UINT classLabelColumnIndex) - Failed to parse CSV file!");
+		throw ARF::ARFException("loadDatasetFromCSVFile(const std::string &filename) - Failed to parse CSV file!");
 		return false;
 	}
 	
 	if(!parser.getConsistentColumnSize()){
-		throw ARF::ARFException("loadDatasetFromCSVFile(const std::string &filename,const UINT classLabelColumnIndexe) - The CSV file does not have a consistent number of columns!");
+		throw ARF::ARFException("loadDatasetFromCSVFile(const std::string &filename) - The CSV file does not have a consistent number of columns!");
 		return false;
 	}
 	
 	if(parser.getColumnSize() <= 1){
-		throw ARF::ARFException("loadDatasetFromCSVFile(const std::string &filename,const UINT classLabelColumnIndex) - The CSV file does not have enough columns! It should contain at least two columns!");
+		throw ARF::ARFException("loadDatasetFromCSVFile(const std::string &filename) - The CSV file does not have enough columns! It should contain at least two columns!");
 		return false;
 	}
 	
 	//Set the number of dimensions
-	numDimensions = parser.getColumnSize()-1;
+	numDimensions = parser.getColumnSize();
 	
 	//Reserve the memory for the data
-	data.resize(parser.getRowSize(), ARF::SensorSample(numDimensions));
+	totalNumSamples = parser.getRowSize();
+	ARF::UINT parserOffset = 0;
+	
+	//parse the header names
+	if(parseColumnHeader) {
+		
+		columnNames.resize(numDimensions);
+		for(int i = 0 ; i < numDimensions ; i++) {
+			columnNames[i] = parser[0][i];
+		}
+		totalNumSamples--;
+		parserOffset = 1;
+	}
+
+	data.resize(totalNumSamples, ARF::SensorSample(numDimensions));
 	
 	//Loop over the samples and add them to the data set
 	ARF::UINT j = 0;
 	ARF::UINT n = 0;
-	totalNumSamples = parser.getRowSize();
-	for(ARF::UINT i=0; i<totalNumSamples; i++){
+	for(ARF::UINT i = 0; i < totalNumSamples; i++){
 		
 		//Get the sample data
 		j=0;
 		n=0;
 		while(j != numDimensions){
-			if(n != classLabelColumnIndex){
-				std::string s = parser[i][n];
-				ARF::Float sampleValue = Util::fromString<ARF::Float>(s);
-				data[i][j++] = sampleValue;
-			}
+			std::string s = parser[i+parserOffset][n];
+			ARF::Float sampleValue = Util::fromString<ARF::Float>(s);
+			data[i][j++] = sampleValue;
 			n++;
 		}
 	}
@@ -300,8 +356,8 @@ std::string DataSet::getStatsAsString() const{
 	std::string statsText;
 	statsText += "DatasetName:\t" + datasetName + "\n";
 	statsText += "DatasetInfo:\t" + infoText + "\n";
-	statsText += "Number of Dimensions:\t" + Util::toString( numDimensions ) + "\n";
-	statsText += "Number of Samples:\t" + Util::toString( totalNumSamples ) + "\n";
+	statsText += "Number of Dimensions:\t" + Util::toString(numDimensions) + "\n";
+	statsText += "Number of Samples:\t" + Util::toString(totalNumSamples) + "\n";
+	statsText += "Column names:\t" + Util::concatenateStrings(columnNames) + "\n";
 	return statsText;
 }
-

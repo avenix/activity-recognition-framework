@@ -29,10 +29,11 @@
 #define Matrix_h
 
 #include "Vector.h"
+#include "../utils/ARFTypedefs.h"
 
 namespace ARF {
 
-template <class T> class Matrix : public Data, public Iterable2D<T>{
+template <class T> class Matrix : public Data, public Iterable<T>{
 public:
 	/**
 	 Default Constructor
@@ -184,7 +185,7 @@ public:
 	 @param r: the index of the row you want, should be in the range [0 rows-1]
 	 @return a const pointer to the data at row r
 	 */
-	inline const T* operator()(const UINT rowIdx, const UINT colIdx) const override{
+	inline const T* operator()(const UINT rowIdx, const UINT colIdx) const {
 		return rowPtr[rowIdx][colIdx];
 	}
 	
@@ -474,7 +475,7 @@ public:
 	 
 	 @return returns the number of columns in the Matrix
 	 */
-	inline UINT getSize() const override{ return size; }
+	inline UINT getSize() const override { return size; }
 	
 	/**
 	 Gets a pointer to the row buffer

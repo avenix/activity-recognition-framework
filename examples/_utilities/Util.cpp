@@ -30,3 +30,11 @@ bool Util::stringEndsWith(const std::string &str, const std::string &ending) {
 		return false;
 	}
 }
+
+std::string Util::concatenateStrings(const ARF::Vector<std::string> &v){
+	std::string s;
+	for(int i = 0 ; i < v.getSize() ; i++){
+		s += v[i] + " ";
+	}
+	return s;
+}

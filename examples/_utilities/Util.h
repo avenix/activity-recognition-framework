@@ -26,10 +26,14 @@
 
 #include <string>
 #include <sstream>
+#include "ARF.h"
 
 class Util{
 public:
+	
 	static bool stringEndsWith(const std::string &str, const std::string &ending);
+	
+	static std::string concatenateStrings(const ARF::Vector<std::string> &v);
 	
 	template<class T>
 	static std::string toString(const T &value){

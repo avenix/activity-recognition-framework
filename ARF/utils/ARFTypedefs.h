@@ -25,6 +25,8 @@
 #ifndef ARFTypedefs_h
 #define ARFTypedefs_h
 
+#include "ARFException.h"
+
 namespace ARF {
 
 //forecasts
@@ -37,9 +39,9 @@ typedef float Float;
 typedef unsigned int UINT;
 
 
-//Activity Recognition Chain types:
-//Data Acquisition -> Preprocessing -> Feature Extraction -> Classification
-//SensorSample -> Signal -> Feature -> FeatureVector -> ClassificationResult
+//Activity Recognition Chain:
+//stages: Data Acquisition -> Preprocessing -> Feature Extraction -> Classification
+//types: SensorSample -> Signal -> Feature -> FeatureVector -> ClassificationResult
 typedef Vector<Float> SensorSample; //A single sensor reading (e.g. ax,ay,az,gx,gy,gz)
 
 typedef Vector<Float> Signal;//A one-dimensional signal (e.g. several ax readings)
@@ -53,13 +55,15 @@ typedef uint8_t ClassificationResult;//the result of a classifier (e.g. running)
 //interfaces
 template <typename T> class Iterable {
 public:
-	virtual const T& operator[](const UINT idx) const = 0;
-	virtual UINT getSize() const = 0;
-};
-
-template <typename T> class Iterable2D {
-public:
-	virtual const T& operator()(const UINT rowIdx, const UINT colIdx) const = 0;
+	virtual const T& operator()(const UINT rowIdx, const UINT colIdx) const {
+		throw ARFException("ARFTypedefs::Iterable operator() called on Iterable()");
+	}
+	virtual const T& operator()(const UINT idx) const {
+		throw ARFException("ARFTypedefs::Iterable operator() called on Iterable()");
+	}
+	virtual const T& operator[](const UINT idx) const {
+		throw ARFException("ARFTypedefs::Iterable operator() called on Iterable()");
+	}
 	virtual UINT getSize() const = 0;
 };
 

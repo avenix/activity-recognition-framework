@@ -1,8 +1,7 @@
 /**
  @file
- @author  Juan Haladjian <juan.haladjian@gmail.com>
- @brief
- 
+ @author Juan Haladjian <juan.haladjian@gmail.com>
+ @brief The MatrixView is a pointer to a portion of a Matrix. This makes it possible to pass references of data instead of copying the data
  
  ARF MIT License
  Copyright (c) <2019> <Juan Haladjian>
@@ -23,45 +22,56 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef ARF_DATA_ITERATOR_H
-#define ARF_DATA_ITERATOR_H
+#ifndef ARF_DATA_ITERATOR_2D_H
+#define ARF_DATA_ITERATOR_2D_H
 
-#include "RingBuffer.h"
+#import <vector>
+#include "Data.h"
 #include "../utils/ARFTypedefs.h"
+#include "../utils/ARFException.h"
 
 namespace ARF {
 
 struct IterableRange {
-	UINT startIdx; ///< The starting index to be accessed
-	UINT nElements; ///< The number of elements that will be accessed
+	UINT startRow;
+	UINT endRow;
+	Vector<uint8_t> columnIndices;
 	
-	/**
-	 Returns a RingBufferRange describing a range of values in a RingBuffer
-	 
-	 @param startIdx the starting index to be accessed
-	 @param nElements the number of elements to be accessed
-	 */
-	IterableRange(UINT startIdx = 0, UINT nElements = 0) :
-	startIdx(startIdx), nElements(nElements){ }
+	IterableRange(UINT startRow=0, UINT endRow=0) :
+	startRow(startRow), endRow(endRow){ }
+	
+	IterableRange(UINT startRow, UINT endRow,
+					  const Vector<uint8_t> &columnIndices) :
+	startRow(startRow), endRow(endRow), columnIndices(columnIndices) { }
+	
+	const UINT getNumColumns() const{
+		return columnIndices.getSize();
+	}
+	
+	const UINT getNumRows() const{
+		return endRow - startRow + 1;
+	}
 };
 
-template <typename T>
 class DataIterator : public Data {
-
+	
 private:
-	const Iterable<T> * iterable; ///< The iterable that will be accessed
-	IterableRange iterableRange; ///< The range of values to access
+	const Iterable<SensorSample> * iterable; ///< The iterable that will be accessed
+	IterableRange iterableRange;
 	
 public:
-	/**
-	 Returns a DataIterator ready to access values in an iterable
-	 
-	 @param iterable the iterable to be accessed
-	 @param startIdx the starting index to be accessed
-	 @param nElements the number of elements to be accessed
-	 */
-	DataIterator(Iterable<T> * iterable, UINT startIdx, UINT nElements) :
-	iterable(iterable), iterableRange({startIdx, nElements}){ }
+	
+	DataIterator(Iterable<SensorSample> * iterable, UINT startRow, UINT endRow, const Vector<uint8_t> &columnIndices) :
+	iterable(iterable), iterableRange({startRow, endRow, columnIndices}){
+	}
+	
+	DataIterator(Iterable<SensorSample> * iterable, IterableRange iterableRange) :
+	iterable(iterable), iterableRange(iterableRange){
+	}
+	
+	DataIterator(const DataIterator & rhs) :
+	iterable(rhs.getIterable()), iterableRange(rhs.getIterableRange()){
+	}
 	
 	/**
 	 Clones the data object
@@ -71,14 +81,46 @@ public:
 		return new DataIterator(*this);
 	}
 	
-	/**
-	 Returns the value at the input index
-	 
-	 @param idx the vector index of the element that should be returned
-	 @return returns the value at index idx
-	 */
-	const T& operator[](const UINT idx) const{
-		return (*iterable)[idx + iterableRange.startIdx];
+	const Iterable<SensorSample> * getIterable() const{
+		return iterable;
+	}
+	
+	const IterableRange& getIterableRange() const{
+		return iterableRange;
+	}
+	
+	void setColumnIndices(const Vector<uint8_t> &newColumnIndices) {
+		iterableRange.columnIndices = newColumnIndices;
+	}
+	
+	void setRowRange(UINT newStartRow, UINT newEndRow) {
+		iterableRange.startRow = newStartRow;
+		iterableRange.endRow = newEndRow;
+	}
+	
+	UINT getStartRow() const{
+		return iterableRange.startRow;
+	}
+	
+	UINT getEndRow() const{
+		return iterableRange.endRow;
+	}
+	
+	UINT getFirstColumn() const{
+		return iterableRange.columnIndices[0];
+	}
+	
+	UINT getLastColumn() const{
+		UINT lastIdx = iterableRange.columnIndices.getSize()-1;
+		return iterableRange.columnIndices[lastIdx];
+	}
+	
+	UINT getNumRows() const {
+		return iterableRange.getNumRows();
+	}
+	
+	UINT getNumColumns() const{
+		return (UINT) iterableRange.getNumColumns();
 	}
 	
 	/**
@@ -86,29 +128,87 @@ public:
 	 
 	 @return the number of elements that will be accessed
 	 */
-	UINT size() const{
-		return iterableRange.nElements;
+	inline UINT getSize() const{
+		return getNumRows() * getNumColumns();
 	}
 	
 	/**
-	 Returns a pointer to the iterable
+	 Returns a reference to the data at (rowIdx, colIdx)
 	 
-	 @return returns a pointer to the iterable
+	 @param rowIdx the index of the row, should be in the range [0 rows)
+	 @param colIdx the index of the column, should be in the range [0 columns)
+	 @return a reference to the data at (rowIdx,colIdx)
 	 */
-	const Iterable<T> * getIterable() const{
-		return iterable;
+	inline const Float& operator()(const UINT rowIdx, const UINT colIdx) const {
+		return getDataAtIdx(rowIdx, colIdx);
 	}
 	
 	/**
-	 Returns the iterable range
+	 Returns the value at the input index
 	 
-	 @return returns the iterable range
+	 @param rowIdx the vector index of the element that should be returned
+	 @return returns the value at index idx
 	 */
-	const IterableRange& getIterableRange() const{
-		return iterableRange;
+	const Float& getDataAtIdx(const UINT rowIdx, const UINT colIdx) const {
+		if(rowIdx >= getNumRows()) throw ARFException("DataIterator::getDataAtIdx() invalid row index");
+		if(colIdx >= getNumColumns()) throw ARFException("DataIterator::getDataAtIdx() invalid colum index");
+		
+		UINT iterableRowIdx = rowIdx + iterableRange.startRow;
+		UINT iterableColumnIdx = iterableRange.columnIndices[colIdx];
+		return (*iterable)[iterableRowIdx][iterableColumnIdx];
+	}
+	
+	/**
+	 Returns the value at the input index
+	 
+	 @param idx the vector index of the element that should be returned
+	 @return returns the value at index idx
+	 */
+	const Float& operator()(const UINT idx) const{
+		return getDataAtIdx(idx);
+	}
+	
+	/**
+	 Returns the value at the input index
+	 
+	 @param idx the vector index of the element that should be returned
+	 @return returns the value at index idx
+	 */
+	const Float& operator[](const UINT idx) const{
+		return getDataAtIdx(idx);
+	}
+	
+	/**
+	 Returns the value at the input index
+	 
+	 @param idx the vector index of the element that should be returned
+	 @return returns the value at index idx
+	 */
+	const Float& getDataAtIdx(const UINT idx) const{
+		
+		if(getNumRows() == 1){
+			if(idx >= getNumColumns()){
+				throw ARFException("DataIterator::getDataAtIdx() column index out of bounds");
+			} else {
+				UINT columnIdx = iterableRange.columnIndices[idx];
+				return (*iterable)[iterableRange.startRow][columnIdx];
+			}
+		} else if(getNumColumns() == 1){
+			if(idx >= getNumRows()){
+				throw ARFException("DataIterator::getDataAtIdx() row index out of bounds");
+			} else {
+				UINT columnIdx = iterableRange.columnIndices[0];
+				return (*iterable)[iterableRange.startRow + idx][columnIdx];
+			}
+		} else {
+			
+			//if data is a matrix, should be accessed with the (rowIdx,colIdx) operator
+			throw ARFException("DataIterator::getDataAtIdx() when accessing data with a single index, the iterable range should be a column vector or a row vector");
+		}
+		
 	}
 };
 
 }
 
-#endif /* ARF_DATA_ITERATOR_H */
+#endif //ARF_DATA_ITERATOR_2D_H

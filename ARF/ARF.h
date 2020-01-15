@@ -30,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dataStructures/Value.h"
 #include "dataStructures/Vector.h"
 #include "dataStructures/Matrix.h"
-#include "dataStructures/DataIterator2D.h"
+#include "dataStructures/DataIterator.h"
 #include "dataStructures/RingBuffer.h"
 
 //include the typedefs

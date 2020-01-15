@@ -27,7 +27,7 @@
 
 #include "../core/Algorithm.h"
 #include "../../dataStructures/DataIterator.h"
-#include "../../dataStructures/DataIterator2D.h"
+#include "../../dataStructures/DataIterator.h"
 #include "../../utils/ARFTypedefs.h"
 
 namespace ARF {
@@ -36,10 +36,9 @@ class DataSelector : public Algorithm {
 	
 private:
 	Iterable<SensorSample> * iterable;
-	IterableRange2D iterableRange;
+	IterableRange iterableRange;
 	
 public:
-
 	/**
 	 Main constructor for the DataSelector to return elements from a 2D iterator
 	 
@@ -48,7 +47,7 @@ public:
 	 @param endRow The last row that should returned in the 2D iterator
 	 @param columnIndices The columns to be returned
 	 */
-	DataSelector(Iterable<SensorSample> * iterable, const UINT startRow, const UINT endRow, const std::vector<uint8_t> &columnIndices) : iterable(iterable), iterableRange(startRow, endRow, columnIndices){ }
+	DataSelector(Iterable<SensorSample> * iterable, const UINT startRow, const UINT endRow, const Vector<uint8_t> &columnIndices) : iterable(iterable), iterableRange(startRow, endRow, columnIndices){ }
 	
 	/**
 	 Returns a DataIterator that can access a selection of the data in the container defined in the 'iterable' property,
@@ -58,7 +57,7 @@ public:
 	 @return A DataIterator object
 	 */
 	Data * execute(Data * data) override {
-			return new DataIterator2D(iterable, iterableRange.startRow, iterableRange.endRow,iterableRange.columnIndices);
+		return new DataIterator(iterable, iterableRange);
 	}
 };
 

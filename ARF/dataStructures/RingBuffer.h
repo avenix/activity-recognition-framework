@@ -86,15 +86,6 @@ public:
 		return new RingBuffer(*this);
 	}
 	
-	/**
-	 Returns the value at the input index
-	 
-	 @param idx the vector index of the element that should be returned
-	 @return returns the value at index idx
-	 */
-	inline const T& operator[](const UINT idx) const override{
-		return getElementAtIdx(idx);
-	}
 	
 	/**
 	 Adds an element to the ringBuffer
@@ -150,10 +141,8 @@ public:
 	 @return the index of the first element
 	 */
 	inline UINT getFirstElementIdx() const{
-		int firstIdx = endIdx - size;
-		if(firstIdx < 0)
-			firstIdx += capacity;
-		return (UINT) firstIdx;
+		if(size < capacity) return size - 1;
+		return (endIdx + 1) % capacity;
 	}
 	
 	/**
@@ -177,15 +166,29 @@ public:
 	}
 	
 	/**
+	 Returns the value at the input index
+	 
+	 @param idx the vector index of the element that should be returned
+	 @return returns the value at index idx
+	 */
+	inline const T& operator[](const UINT idx) const override{
+		return getElementAtIdx(idx);
+	}
+	
+	/**
 	 Retrieves an element from the ring buffer
 	 
 	 @param idx the index of the element you want
 	 @return the SensorSample
 	 */
 	const T& getElementAtIdx(UINT idx) const{
+		if(idx >= size){
+			throw ARFException("RingBuffer::getElementAtIdx() out of bounds");
+		}
+		
 		UINT firstIdx = getFirstElementIdx();
 		int actualIdx = idx + firstIdx;
-		if(actualIdx > capacity){
+		if(actualIdx >= capacity){
 			actualIdx -= capacity;
 		}
 		return data[actualIdx];

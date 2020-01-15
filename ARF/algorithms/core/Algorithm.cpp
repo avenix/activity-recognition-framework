@@ -20,7 +20,7 @@
 
 #include <stack>
 #include "Algorithm.h"
-#include "../../dataStructures/DataIterator2D.h"
+#include "../../dataStructures/DataIterator.h"
 #include "../../dataStructures/Data.h"
 
 namespace ARF {
