@@ -23,49 +23,85 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 #include <vector>
-
 #include "ARF.h"
 #include "DataSet.h"
 
-#include <iostream>
 using namespace std;
-
 using namespace ARF;
+
+void printRingBuffer(const RingBuffer<SensorSample> &ringBuffer){
+	for(int i = 0 ; i < ringBuffer.getSize() ; i++){
+		SensorSample sample = ringBuffer[i];
+		for(int j = 0 ; j < 6 ; j++){
+			cout << sample[j] << " ";
+		}
+		cout << endl;
+	}
+}
+
+void printDataWithIterator(const DataIterator &dataIterator){
+	for(int i = 0 ; i < dataIterator.getNumRows(); i++){
+		for(int j = 0 ; j < dataIterator.getNumColumns(); j++){
+			cout << dataIterator(i,j) << " ";
+		}
+		cout << endl;
+	}
+}
 
 int main(int argc, const char * argv[]) {
 	
 	//ring buffer able to hold 301 elements
-	auto ringBuffer = RingBuffer<SensorSample>(301);
-	auto ringBufferAlgorithm = RingBufferAlgorithm(&ringBuffer);//1,201
+	RingBuffer<SensorSample> ringBuffer(301);
+	RingBufferAlgorithm ringBufferAlgorithm(&ringBuffer);
 
-	//select ax,ay,az
-	auto columnIndices = Vector<uint8_t>(3,0);
-	columnIndices[1] = 1;
-	columnIndices[2] = 2;
-	auto dataSelector = DataSelector(&ringBuffer,0,0,columnIndices);
+	//select ax,ay,az of the last sample in the ring buffer
+	//auto accelColumns = Vector<uint8_t>();
+	DataSelector accelSelector(&ringBuffer,300,300,{0,1,2});
 
 	//magnitude of ax,ay,az
-	auto magnitude = Magnitude();
+	Magnitude magnitude;
 	
-	//auto peakDetector = new PeakDetector(0.8, 100);
+	//minPeakHeight = 0.8, minPeakDistance = 100
+	PeakDetector peakDetector(0.8, 100);
+	
+	//ax signal in segment 60-150
+	DataSelector midAxSelector(&ringBuffer,60,150,{0});
+	DataSelector midAzSelector(&ringBuffer,60,150,{2});
+	DataSelector rightAySelector(&ringBuffer,180,230,{1});
+	
+	//feature extraction algorithms
+	Mean mean;
+	STD std;
+	ZCR zcr;
 	
 	//build pipeline
-	ringBufferAlgorithm << dataSelector << magnitude;
-	
-	//execute pipeline
-	//SensorSample sample1 = SensorSample(std::vector<float>{1.0,2.0,3.0});
-	//SensorSample sample2 = SensorSample(std::vector<float>{4.0,5.0,6.0});
+	ringBufferAlgorithm << accelSelector << magnitude << peakDetector;
+
+	//peakDetector << midAxSelector << mean;
+	//peakDetector << midAzSelector << mean;
+	peakDetector << midAzSelector << std;
+	//peakDetector << rightAySelector << zcr;
 	
 	//load some data
-	DataSet dataset = DataSet("data2.txt",true);
+	DataSet dataset = DataSet("test.arf",true);
+	//DataSet dataset = DataSet("test.txt",true);
+	//dataset.save("1-niklas.arf");
 	
 	//execute algorithm for each sample
+	Vector<Data*> output(4);
 	for(int i = 0 ; i < dataset.getNumSamples() ; i++){
 		
 		SensorSample sample = dataset[i];
-		auto output = (Value *) Algorithm::ExecutePipeline(&ringBufferAlgorithm,&sample);
+		UINT outputCount = Algorithm::ExecutePipeline(&ringBufferAlgorithm,&sample,output);
+			//printRingBuffer(ringBuffer);
+			//printDataWithIterator(*output);
 		
-		std::cout << output->getValue() << std::endl;
+		for(int i = 0 ; i < outputCount ; i++){
+			std::cout << ((Value*)output[i])->getValue() << std::endl;
+		}
+		
+		if(outputCount > 0)
+			break;
 	}
 	
 	return 0;

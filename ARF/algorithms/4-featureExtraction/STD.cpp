@@ -1,4 +1,4 @@
-/** 
+/**
  ARF MIT License
  Copyright (c) <2019> <Juan Haladjian>
  
@@ -18,25 +18,33 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "Mean.h"
-#include "../../dataStructures/Vector.h"
+#include "STD.h"
 #include "../../dataStructures/Value.h"
 #include "DataIterator.h"
+#include "Mean.h"
+#include <math.h>
 
 namespace ARF {
 
-Data* Mean::execute(Data * data) {
+Data* STD::execute(Data * data) {
+	
 	const Signal &signal = *(Signal*) data;
+	
+	Mean meanComputer;
+	Value * output = (Value*) meanComputer.execute(data);
+	Float mean = output->getValue();
+	
 	UINT n = signal.getSize();
 	
-	float sum = 0.0;
-	
-	for(int i = 0 ; i < n ; i++)
-		sum += signal[i];
-	
-	float mean = sum / (float)n;
-	
-	return new Value(mean);
+	Float accum = 0.0;
+	for(int i = 0 ; i < n ; i++){
+		Float diff = signal[i] - mean;
+		accum = diff * diff;
+	}
+
+	Float stdev = sqrt(accum / float(n-1));
+	output->setValue(stdev);
+	return output;
 }
 
 }

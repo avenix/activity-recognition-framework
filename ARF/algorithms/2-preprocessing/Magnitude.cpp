@@ -22,10 +22,8 @@
 #include "../../dataStructures/Value.h"
 #include "../../dataStructures/Data.h"
 #include "../../dataStructures/Matrix.h"
-#include <cmath>
-
 #include "../../dataStructures/DataIterator.h"
-#include "../../utils/ARFTypedefs.h"
+#include <cmath>
 
 namespace ARF {
 
@@ -37,7 +35,6 @@ namespace ARF {
  */
 Data* Magnitude::execute(Data * data) {
 	const DataIterator& signal = *(DataIterator*) data;
-	//Float result = std::sqrt(signal->getDataAtIdx(0) * signal->getDataAtIdx(1) * signal->getDataAtIdx(2));
 	Float result = std::sqrt(signal[0] * signal[0] + signal[1] * signal[1] + signal[2] * signal[2]);
 	
 	return new Value(result);

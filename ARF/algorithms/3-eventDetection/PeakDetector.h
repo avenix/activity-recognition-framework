@@ -26,20 +26,23 @@
 #define ARF_PEAKDETECTOR_H
 
 #include "../core/Algorithm.h"
-#include "../../dataStructures/Matrix.h"
 
 namespace ARF {
 
 class PeakDetector : public Algorithm {
-private:
-	int samplesSinceLastPeak = -1;
-	float minPeakHeight;
-	int minPeakDistance;
-	float lastPeakValue = 0.0;
 	
 public:
-	Data* execute(Data* data) override;
-	PeakDetector(float minPeakHeight, int minPeakDistance);
+	
+	Data * execute(Data* data) override;
+	
+	PeakDetector(float minPeakHeight, UINT minPeakDistance);
+	
+private:
+	
+	int samplesSinceLastPeak;
+	float minPeakHeight;
+	int minPeakDistance;
+	float lastPeakValue;
 };
 
 }

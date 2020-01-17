@@ -73,11 +73,11 @@ TEST(DataSelector, SelectMultipleElements) {
 	auto dataSelector = DataSelector(&ringBuffer,1,2,columns);
 	
 	//get the DataIterator
-	DataIterator iterator = *((DataIterator*) dataSelector.execute(nullptr));
-	EXPECT_EQ(4.0, iterator(0,0));
-	EXPECT_EQ(5.0, iterator(0,1));
-	EXPECT_EQ(7.0, iterator(1,0));
-	EXPECT_EQ(8.0, iterator(1,1));
+	DataIterator& iterator = *((DataIterator*) dataSelector.execute(nullptr));
+	EXPECT_EQ(iterator(0,0),4.0);
+	EXPECT_EQ(iterator(0,1),5.0);
+	EXPECT_EQ(iterator(1,0),7.0);
+	EXPECT_EQ(iterator(1,1),8.0);
 	EXPECT_THROW(iterator(1,2),ARFException);
 	EXPECT_THROW(iterator(1,2),ARFException);
 }

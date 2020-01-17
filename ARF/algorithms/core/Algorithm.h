@@ -73,12 +73,22 @@ public:
 	Algorithm& operator<<(Algorithm &algorithm);
 	
 	/**
+	Makes this algorithm point to the algorithm passed as a parameter
+	
+	@param algorithm the algorithm this algorithm instance should point to
+	@return returns a pointer to the current algorithm so that several << operators can be concatenated in the same line
+	*/
+	Algorithm& operator<<(Algorithm &&algorithm);
+	
+	/**
 	Performs a depth-first traversal of the directed graph that as a root the input algorithm. It invokes the execute() method of every algorithm passing as input the pointer to the data instance output by the previous algorithm's execute() method
 	
 	@param algorithm the root of the directed graph
-	@return the data produced by the last algorithm in the graph
+	@param data the input data 	
+	@param output the data produced by the leaf algorithms in the graph
+	@return the number of results in the output vector
 	*/
-	static Data * ExecutePipeline(Algorithm * algorithm, Data * data);
+	static UINT ExecutePipeline(Algorithm * algorithm, Data * data, Vector<Data*> & output);
 };
 
 }

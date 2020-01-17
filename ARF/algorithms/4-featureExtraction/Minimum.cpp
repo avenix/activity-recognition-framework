@@ -19,9 +19,8 @@
  */
 
 #include "Minimum.h"
-#include "../../dataStructures/DataIterator.h"
-#include "../../dataStructures/Vector.h"
 #include "../../dataStructures/Value.h"
+#include "../../dataStructures/DataIterator.h"
 
 namespace ARF {
 

@@ -35,8 +35,8 @@ namespace ARF {
 class DataSelector : public Algorithm {
 	
 private:
-	Iterable<SensorSample> * iterable;
-	IterableRange iterableRange;
+	const Iterable<SensorSample> * iterable;
+	const IterableRange iterableRange;
 	
 public:
 	/**
@@ -47,7 +47,53 @@ public:
 	 @param endRow The last row that should returned in the 2D iterator
 	 @param columnIndices The columns to be returned
 	 */
-	DataSelector(Iterable<SensorSample> * iterable, const UINT startRow, const UINT endRow, const Vector<uint8_t> &columnIndices) : iterable(iterable), iterableRange(startRow, endRow, columnIndices){ }
+	DataSelector(const Iterable<SensorSample> * iterable, const UINT startRow, const UINT endRow, const Vector<uint8_t> &columnIndices) : iterable(iterable), iterableRange(startRow, endRow, columnIndices){ }
+	
+	/**
+	 Main constructor for the DataSelector to return elements from a 2D iterator
+	 
+	 @param iterable The collection of SensorSamples that will be accessed
+	 @param startRow The first row that should be accessed in the 2D iterator
+	 @param endRow The last row that should returned in the 2D iterator
+	 @param columnIndices The columns to be returned
+	 */
+	DataSelector(const Iterable<SensorSample> * iterable, const UINT startRow, const UINT endRow, std::initializer_list<uint8_t> columnIndices) : iterable(iterable), iterableRange(startRow, endRow, Vector<uint8_t>(columnIndices)){ }
+	
+	/**
+	 Main constructor for the DataSelector to return elements from a 2D iterator
+	 
+	 @param iterable The iterable from where the SensorSamples that will be accessed
+	 @param iterableRange The range of indices that will be accessed
+	 
+	 */
+	DataSelector(const Iterable<SensorSample> * iterable, const IterableRange &iterableRange ) : iterable(iterable), iterableRange(iterableRange) {}
+					 
+	/**
+	 Copy constructor for the DataSelector
+	 
+	 @param dataSelector the dataSelector that will be used to initialize the current instance
+	 */
+	DataSelector(const DataSelector& dataSelector) :
+	DataSelector(dataSelector.getIterable(),dataSelector.getIterableRange()){
+	}
+	
+	/**
+	Returns a pointer to the iterable this instance of the DataSelector uses to select data
+	
+	@return a pointer to the iterable
+	*/
+	const Iterable<SensorSample> * getIterable() const{
+		return iterable;
+	}
+	
+	/**
+	Returns the iterable range this instance of the DataSelector uses to select data
+	
+	@return a copy of the iterable range
+	*/
+	const IterableRange getIterableRange() const{
+		return iterableRange;
+	}
 	
 	/**
 	 Returns a DataIterator that can access a selection of the data in the container defined in the 'iterable' property,

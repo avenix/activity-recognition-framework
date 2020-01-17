@@ -61,11 +61,11 @@ private:
 	
 public:
 	
-	DataIterator(Iterable<SensorSample> * iterable, UINT startRow, UINT endRow, const Vector<uint8_t> &columnIndices) :
+	DataIterator(const Iterable<SensorSample> * iterable, UINT startRow, UINT endRow, const Vector<uint8_t> &columnIndices) :
 	iterable(iterable), iterableRange({startRow, endRow, columnIndices}){
 	}
 	
-	DataIterator(Iterable<SensorSample> * iterable, IterableRange iterableRange) :
+	DataIterator(const Iterable<SensorSample> * iterable, const IterableRange &iterableRange) :
 	iterable(iterable), iterableRange(iterableRange){
 	}
 	

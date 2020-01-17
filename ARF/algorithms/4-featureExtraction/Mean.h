@@ -33,6 +33,12 @@ namespace ARF {
 
 class Mean : public Algorithm {
 public:
+	/**
+	Returns the mean of the input Signal
+	
+	@param data A Signal
+	@return The mean of the Signal
+	*/
 	Data* execute(Data * data) override;
 };
 

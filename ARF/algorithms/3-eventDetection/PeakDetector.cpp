@@ -16,18 +16,19 @@
  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+ 
  */
 
 #include "PeakDetector.h"
 #include "../../dataStructures/Matrix.h"
 #include "../../dataStructures/Value.h"
 
+#include <iostream>
+using namespace std;
+
 namespace ARF {
 
-PeakDetector::PeakDetector(float minPeakHeight, int minPeakDistance) :
-minPeakHeight(minPeakHeight),
-minPeakDistance(minPeakDistance) {
+PeakDetector::PeakDetector(float minPeakHeight, UINT minPeakDistance) : minPeakHeight(minPeakHeight), minPeakDistance(minPeakDistance), samplesSinceLastPeak(-1), lastPeakValue(0.0) {
 	
 }
 
@@ -40,18 +41,20 @@ minPeakDistance(minPeakDistance) {
 Data* PeakDetector::execute(Data* data) {
 	Value * value = (Value*) data;
 	
-	samplesSinceLastPeak += 1;
+	samplesSinceLastPeak++;
 	
-	if (lastPeakValue > 0 && samplesSinceLastPeak >= minPeakDistance) {
+	if (lastPeakValue > 0 && samplesSinceLastPeak >= (int) minPeakDistance) {
+		//cout << lastPeakValue << " " << samplesSinceLastPeak << " " << endl;
+		
 		lastPeakValue = 0.0;
 		samplesSinceLastPeak = -1;
-		return data;
+		return data; //new Value(lastPeakValue);
 	}
 	
 	float sampleMagnitude = value->getValue();
 	
 	if (sampleMagnitude >= minPeakHeight) {
-		if (sampleMagnitude > lastPeakValue || samplesSinceLastPeak >= minPeakDistance) {
+		if (sampleMagnitude > lastPeakValue || samplesSinceLastPeak >= (int) minPeakDistance) {
 			lastPeakValue = sampleMagnitude;
 			samplesSinceLastPeak = 0;
 		}

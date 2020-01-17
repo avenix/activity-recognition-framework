@@ -16,6 +16,10 @@
 		9A5DB51423BF51D800BBC964 /* gtest-all.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9A5DB51323BF51D800BBC964 /* gtest-all.cc */; };
 		9A5DB51723BF531C00BBC964 /* RingBufferTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A5DB51623BF531C00BBC964 /* RingBufferTest.cpp */; };
 		9A5DB51823BF531C00BBC964 /* RingBufferTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A5DB51623BF531C00BBC964 /* RingBufferTest.cpp */; };
+		9A94F2EE23D1E5E6009F88E4 /* ZCR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A94F2EC23D1E5E6009F88E4 /* ZCR.cpp */; };
+		9A94F2EF23D1E5E6009F88E4 /* ZCR.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A94F2ED23D1E5E6009F88E4 /* ZCR.h */; };
+		9A94F2F223D1E846009F88E4 /* STD.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A94F2F023D1E846009F88E4 /* STD.h */; };
+		9A94F2F323D1E846009F88E4 /* STD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A94F2F123D1E846009F88E4 /* STD.cpp */; };
 		9AFA8C8F23C1C46300420D8D /* RingBufferAlgorithmTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8C8D23C1426300420D8D /* RingBufferAlgorithmTest.cpp */; };
 		9AFA8C9023C1C46400420D8D /* RingBufferAlgorithmTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA8C8D23C1426300420D8D /* RingBufferAlgorithmTest.cpp */; };
 		9AFA8CB323C601B900420D8D /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AFA8C9323C601B900420D8D /* Data.h */; };
@@ -125,6 +129,10 @@
 		9A5DB28923BF51AF00BBC964 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		9A5DB51323BF51D800BBC964 /* gtest-all.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "gtest-all.cc"; path = "src/gtest-all.cc"; sourceTree = "<group>"; };
 		9A5DB51623BF531C00BBC964 /* RingBufferTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RingBufferTest.cpp; sourceTree = "<group>"; };
+		9A94F2EC23D1E5E6009F88E4 /* ZCR.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ZCR.cpp; sourceTree = "<group>"; };
+		9A94F2ED23D1E5E6009F88E4 /* ZCR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZCR.h; sourceTree = "<group>"; };
+		9A94F2F023D1E846009F88E4 /* STD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STD.h; sourceTree = "<group>"; };
+		9A94F2F123D1E846009F88E4 /* STD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = STD.cpp; sourceTree = "<group>"; };
 		9AFA8C8D23C1426300420D8D /* RingBufferAlgorithmTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RingBufferAlgorithmTest.cpp; sourceTree = "<group>"; };
 		9AFA8C9323C601B900420D8D /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		9AFA8C9423C601B900420D8D /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
@@ -344,6 +352,10 @@
 				9AFA8CA123C601B900420D8D /* Minimum.cpp */,
 				9AFA8CA423C601B900420D8D /* Mean.h */,
 				9AFA8CA223C601B900420D8D /* Mean.cpp */,
+				9A94F2F023D1E846009F88E4 /* STD.h */,
+				9A94F2F123D1E846009F88E4 /* STD.cpp */,
+				9A94F2ED23D1E5E6009F88E4 /* ZCR.h */,
+				9A94F2EC23D1E5E6009F88E4 /* ZCR.cpp */,
 			);
 			path = "4-featureExtraction";
 			sourceTree = "<group>";
@@ -430,6 +442,7 @@
 			files = (
 				9AFA8CCA23C601B900420D8D /* ARF.h in Headers */,
 				9AFA8CC823C601B900420D8D /* ARFTypedefs.h in Headers */,
+				9A94F2EF23D1E5E6009F88E4 /* ZCR.h in Headers */,
 				9AFA8CBF23C601B900420D8D /* Minimum.h in Headers */,
 				9AFA8CB523C601B900420D8D /* Value.h in Headers */,
 				9AFA8CC623C601B900420D8D /* ARFConstants.h in Headers */,
@@ -439,6 +452,7 @@
 				9AFA8CB623C601B900420D8D /* DataIterator.h in Headers */,
 				9AFA8CC023C601B900420D8D /* Mean.h in Headers */,
 				9AFA8CC723C601B900420D8D /* ARFException.h in Headers */,
+				9A94F2F223D1E846009F88E4 /* STD.h in Headers */,
 				9AFA8CC523C601B900420D8D /* RingBufferAlgorithm.h in Headers */,
 				9AFA8CB423C601B900420D8D /* Matrix.h in Headers */,
 				9AFA8CB823C601B900420D8D /* RingBuffer.h in Headers */,
@@ -636,8 +650,10 @@
 				9AFA8CBB23C601B900420D8D /* PeakDetector.cpp in Sources */,
 				9AFA8CC423C601B900420D8D /* Magnitude.cpp in Sources */,
 				9AFA8CBA23C601B900420D8D /* Algorithm.cpp in Sources */,
+				9A94F2EE23D1E5E6009F88E4 /* ZCR.cpp in Sources */,
 				9AFA8CBE23C601B900420D8D /* Mean.cpp in Sources */,
 				9AFA8CBD23C601B900420D8D /* Minimum.cpp in Sources */,
+				9A94F2F323D1E846009F88E4 /* STD.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

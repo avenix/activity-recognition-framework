@@ -33,7 +33,6 @@ namespace ARF {
 
 class Value : public Data {
 public:
-	Value() = default;
 	
 	Value(Float value): value{value} { }
 	
@@ -45,15 +44,27 @@ public:
 		return new Value(value);
 	}
 	
-	Float getValue() {
+	/**
+	 Retrieves the raw value
+	 @return the value as a Float
+	 */
+	Float getValue() const{
 		return value;
 	}
+	
+	/**
+	 Sets the raw value
+	 @param value the Float value that should be set
+	 */
+	void setValue(Float value) {
+		value = value;
+	}
+	
 	
 	~Value(){}
 	
 private:
 	Float value;
-	
 };
 
 }

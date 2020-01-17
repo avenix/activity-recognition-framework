@@ -56,7 +56,18 @@ public:
 	 
 	 @param size the size of the vector
 	 */
-	Vector(const UINT size, const T &value) : data(std::vector< T >(size, value)){}
+	Vector(const UINT size, const T &value) : data(std::vector<T>(size, value)){}
+	
+	
+	/**
+	 Fills values in the vector with an initializer list (to be used as Vector v{1,2,3};
+	 
+	 @param list an initializer list of the values in the vector
+	 */
+	Vector(std::initializer_list<T> &list) : data(list) {
+		/*
+		std::copy();*/
+	}
 	
 	/**
 	 Copy Constructor, copies the values from the rhs Vector to this Vector instance
@@ -173,6 +184,13 @@ public:
 	 */
 	void clear(){
 		data.clear();
+	}
+	
+	/**
+	 Determines whether the data vector is empty
+	 */
+	bool empty() const{
+		return data.empty();
 	}
 	
 	/**
@@ -320,10 +338,11 @@ public:
 	 
 	 @return returns a pointer to the raw data
 	 */
+	/*
 	const T* getData() const {
 		if(getSize() == 0 ) return NULL;
 		return &(data)[0];
-	}
+	}*/
 	
 };
 

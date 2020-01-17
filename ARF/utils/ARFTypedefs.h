@@ -35,7 +35,6 @@ template <typename T> class Matrix;
 
 //typedefs
 typedef float Float;
-
 typedef unsigned int UINT;
 
 
@@ -44,7 +43,8 @@ typedef unsigned int UINT;
 //types: SensorSample -> Signal -> Feature -> FeatureVector -> ClassificationResult
 typedef Vector<Float> SensorSample; //A single sensor reading (e.g. ax,ay,az,gx,gy,gz)
 
-typedef Vector<Float> Signal;//A one-dimensional signal (e.g. several ax readings)
+class DataIterator;
+typedef DataIterator Signal;//A one-dimensional signal (e.g. several ax readings)
 
 typedef Float Feature;//A feature describing a Signal (e.g. the mean of a Signal)
 

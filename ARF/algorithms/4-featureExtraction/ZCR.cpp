@@ -1,4 +1,4 @@
-/** 
+/**
  ARF MIT License
  Copyright (c) <2019> <Juan Haladjian>
  
@@ -18,25 +18,22 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "Mean.h"
-#include "../../dataStructures/Vector.h"
+#include "ZCR.h"
 #include "../../dataStructures/Value.h"
 #include "DataIterator.h"
+#include <math.h>
 
 namespace ARF {
 
-Data* Mean::execute(Data * data) {
+Data* ZCR::execute(Data * data) {
 	const Signal &signal = *(Signal*) data;
 	UINT n = signal.getSize();
 	
-	float sum = 0.0;
-	
-	for(int i = 0 ; i < n ; i++)
-		sum += signal[i];
-	
-	float mean = sum / (float)n;
-	
-	return new Value(mean);
+	int zeroCrossingCount = 0;
+	for (int i = 0; i < n-1; i++) {
+		if (signbit(signal[i+1]) != signbit(signal[i])) zeroCrossingCount++;
+	}
+	return new Value((float)zeroCrossingCount / (float)n);
 }
 
 }

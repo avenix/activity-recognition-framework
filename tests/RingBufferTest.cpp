@@ -31,7 +31,7 @@ TEST(RingBuffer, InitialState) {
 	//create a ring buffer with capacity for 10 samples
 	RingBuffer<int> ringBuffer(10);
 	
-	EXPECT_EQ(0, ringBuffer.getSize());
+	EXPECT_EQ(ringBuffer.getSize(),0);
 }
 
 TEST(RingBuffer, AddSample) {
@@ -45,7 +45,7 @@ TEST(RingBuffer, AddSample) {
 	//get the current sample
 	float outputValue = ringBuffer.getFirstElement();
 	
-	EXPECT_EQ(1, ringBuffer.getSize());
+	EXPECT_EQ(ringBuffer.getSize(),1);
 	EXPECT_EQ(sampleValue, outputValue);
 }
 

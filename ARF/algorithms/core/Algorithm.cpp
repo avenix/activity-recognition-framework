@@ -20,6 +20,7 @@
 
 #include <stack>
 #include "Algorithm.h"
+#include "ARFTypedefs.h"
 #include "../../dataStructures/DataIterator.h"
 #include "../../dataStructures/Data.h"
 
@@ -35,12 +36,17 @@ void Algorithm::addAlgorithm(Algorithm * algorithm){
 	nextAlgorithms.push_back(algorithm);
 }
 
-Algorithm& Algorithm::operator<<(Algorithm & algorithm){
+Algorithm& Algorithm::operator<<(Algorithm &algorithm){
 	addAlgorithm(&algorithm);
 	return algorithm;
 }
 
-Data * Algorithm::ExecutePipeline(Algorithm * root, Data * inputData) {
+Algorithm& Algorithm::operator<<(Algorithm &&algorithm){
+	addAlgorithm(&algorithm);
+	return algorithm;
+}
+
+UINT Algorithm::ExecutePipeline(Algorithm * root, Data * inputData, Vector<Data*> & outputVector) {
 	std::stack<Algorithm*> algorithmStack;
 	std::stack<SharedDataPtr> dataStack;
 	
@@ -50,7 +56,9 @@ Data * Algorithm::ExecutePipeline(Algorithm * root, Data * inputData) {
 	//add input data to data stack
 	Data * input = inputData->clone();
 	dataStack.push(SharedDataPtr(input));
-
+	
+	UINT outputCount = 0;
+	
 	while (!algorithmStack.empty()) {
 		
 		//get top algorithm and remove it from the stack
@@ -75,20 +83,21 @@ Data * Algorithm::ExecutePipeline(Algorithm * root, Data * inputData) {
 		} else {
 			outputDataPtr = SharedDataPtr(output);
 		}
-				
-		//push next algorithms to the stack
-		for (Algorithm * algorithm : root->getNextAlgorithms()){
-			algorithmStack.push(algorithm);
-			dataStack.push(outputDataPtr);
-		}
 		
-		//if this is the last element, return the value
-		if(algorithmStack.empty()) {
-			return output->clone();
+		Vector<Algorithm*> nextAlgorithms = root->getNextAlgorithms();
+		if(nextAlgorithms.empty()){
+			outputVector[outputCount++] = output->clone();
+		} else {
+			//push next algorithms to the stack backwards
+			for (int i = nextAlgorithms.getSize()-1 ; i >= 0 ; i--){
+				Algorithm * algorithm = nextAlgorithms[i];
+				algorithmStack.push(algorithm);
+				dataStack.push(outputDataPtr);
+			}
 		}
 	}
+	return outputCount;
 	
-	return nullptr;
 }
 
 }

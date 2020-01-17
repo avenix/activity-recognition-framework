@@ -46,7 +46,7 @@ private:
 	UINT notificationInterval; ///< The number of samples after which the RingBuffer outputs each sample
 	UINT notificationOffset; ///< The amount of samples between the last sample added to the RingBuffer and the sample output
 	UINT notificationCount; ///< The number of samples since the last notification
-	
+	bool notifyWhenFull; ///< Indicates whether the ring buffer should notify samples always or only when it is full
 	/**
 	 Retrieves the sample the RingBuffer should output, typically the last sample added, but can be an older sample if the notificationOffset > 0
 	 
@@ -74,7 +74,7 @@ public:
 	 */
 	RingBufferAlgorithm(RingBuffer<SensorSample> * ringBuffer, UINT notificationInterval = 1,
 							  UINT notificationOffset = 0) : ringBuffer(ringBuffer),
-	notificationInterval(notificationInterval), notificationOffset(notificationOffset), notificationCount(0) {
+	notificationInterval(notificationInterval), notificationOffset(notificationOffset), notificationCount(0), notifyWhenFull(true) {
 		
 		if (notificationInterval < 1){
 			throw ARFException("RingBuffer::RingBuffer() notificationInterval should be bigger than 1");
@@ -116,17 +116,18 @@ public:
 		addSample((SensorSample*) sample);
 		
 		//check if an output should be produced
-		notificationCount++;
-		if(notificationCount == notificationInterval){
-			notificationCount = 0;
-			
-			//check if there are enough samples in the buffer
-			if(notificationOffset < ringBuffer->getSize()) {
+		if(!notifyWhenFull || ringBuffer->isFull()){
+			notificationCount++;
+			if(notificationCount == notificationInterval){
+				notificationCount = 0;
 				
-				return (Data*) getNotificationSample();
+				//check if there are enough samples in the buffer
+				if(notificationOffset < ringBuffer->getSize()) {
+					
+					return (Data*) getNotificationSample();
+				}
 			}
 		}
-		
 		return nullptr;
 	}
 	
@@ -155,6 +156,15 @@ public:
 	 */
 	UINT getNotificationOffset(){
 		return notificationOffset;
+	}
+	
+	/**
+	 Sets the notifyWhenFull property
+	 
+	 @param b whether the ring buffer should notify only after it is full
+	 */
+	void setNotifyWhenFull(bool b){
+		notifyWhenFull = b;
 	}
 	
 	/**

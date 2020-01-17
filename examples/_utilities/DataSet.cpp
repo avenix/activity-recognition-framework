@@ -120,8 +120,8 @@ bool DataSet::load(const std::string &filename,const bool parseColumnHeader){
 
 bool DataSet::saveDatasetToFile(const std::string &filename) const{
 	
-	std::fstream file;
-	file.open(filename.c_str(), std::ios::out);
+	std::ofstream file;
+	file.open(filename.c_str(), std::ofstream::out | std::ofstream::binary);
 	
 	if( !file.is_open() ){
 		return false;
@@ -143,13 +143,17 @@ bool DataSet::saveDatasetToFile(const std::string &filename) const{
 	}
 	file << std::endl;
 	
-	//print data
-	file << "Data:\n";
+	//write the data
 	for(ARF::UINT i = 0; i < totalNumSamples; i++){
+		ARF::SensorSample sample = data[i];
+		ARF::Float * dataPointer = sample.getData();
+		file.write(reinterpret_cast<char*>(dataPointer), numDimensions * sizeof(ARF::Float));
+		
+		/*
 		for(ARF::UINT j = 0; j < numDimensions; j++){
-			file << "\t" << data[i][j];
+			file << data[i][j];
 		}
-		file << std::endl;
+		file << std::endl;*/
 	}
 	
 	file.close();
@@ -158,8 +162,8 @@ bool DataSet::saveDatasetToFile(const std::string &filename) const{
 
 bool DataSet::loadDatasetFromFile(const std::string &filename){
 	
-	std::fstream file;
-	file.open(filename.c_str(), std::ios::in);
+	std::ifstream file;
+	file.open(filename.c_str(), std::ifstream::in | std::ios::binary);
 	clear();
 	
 	if( !file.is_open() ){
@@ -181,7 +185,7 @@ bool DataSet::loadDatasetFromFile(const std::string &filename){
 	file >> word;
 	if(word != "InfoText:"){
 		file.close();
-		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find InfoText header!");
+		throw ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find InfoText header!");
 		return false;
 	}
 	
@@ -196,7 +200,7 @@ bool DataSet::loadDatasetFromFile(const std::string &filename){
 	//Get the number of dimensions in the training data
 	if(word != "NumDimensions:"){
 		file.close();
-		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find NumDimensions header!");
+		throw ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find NumDimensions header!");
 		return false;
 	}
 	file >> numDimensions;
@@ -205,35 +209,40 @@ bool DataSet::loadDatasetFromFile(const std::string &filename){
 	file >> word;
 	if(word != "TotalNumSamples:"){
 		file.close();
-		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find TotalNumSamples header!");
+		throw ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find TotalNumSamples header!");
 		return false;
 	}
 	file >> totalNumSamples;
 	
-	//Get the header
+	//Get the column names
 	file >> word;
 	if(word != "ColumnHeaders:"){
 		file.close();
-		ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find ColumnHeaders header!");
+		throw ARF::ARFException("loadDatasetFromFile(const std::string &filename) - failed to find ColumnHeaders header!");
 		return false;
 	}
 	
 	columnNames.resize(numDimensions);
-	
 	for(ARF::UINT j = 0; j < numDimensions; j++){
 		file >> columnNames[j];
 	}
 	
+	//skip the \n character
+	file.get();
+		
 	//Load the data
 	ARF::SensorSample tempSample(numDimensions);
 	data.resize(totalNumSamples, tempSample);
 	
 	for(ARF::UINT i = 0; i < totalNumSamples; i++){
+		//instantiate a sample
 		ARF::SensorSample sample(numDimensions,0);
 		
-		for(ARF::UINT j = 0; j < numDimensions; j++){
-			file >> sample[j];
-		}
+		//read the row
+		ARF::Float * dataPointer = sample.getData();
+		file.read(reinterpret_cast<char*>(dataPointer), numDimensions * sizeof(ARF::Float));
+		
+		//save it
 		data[i] = sample;
 	}
 	

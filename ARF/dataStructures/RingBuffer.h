@@ -109,9 +109,18 @@ public:
 	}
 	
 	/**
-	 Retrieves the amount of elements in the RingBuffer
+	 Retrieves whether the ring buffer is full
 	 
-	 @return the size of the RingBuffer
+	 @return true if the ring buffer is full, false otherwise
+	 */
+	inline bool isFull() const{
+		return size == capacity;
+	}
+	
+	/**
+	 Retrieves the amount of elements in the ring buffer
+	 
+	 @return the size of the ring buffer
 	 */
 	inline UINT getSize() const override{
 		return size;
@@ -141,8 +150,7 @@ public:
 	 @return the index of the first element
 	 */
 	inline UINT getFirstElementIdx() const{
-		if(size < capacity) return size - 1;
-		return (endIdx + 1) % capacity;
+		return (size < capacity) ? 0 : endIdx;
 	}
 	
 	/**
